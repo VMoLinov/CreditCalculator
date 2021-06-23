@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import molinov.creditcalculator.R
 import molinov.creditcalculator.databinding.MainFragmentBinding
 
@@ -23,6 +24,14 @@ class MainFragment : Fragment() {
     ): View {
         _binding = MainFragmentBinding.inflate(inflater, container, false)
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val items = listOf("аннуитет", "классика")
+        val adapter = ArrayAdapter(requireContext(), R.layout.list_item, items)
+        binding.creditType.setText(items[0])
+        binding.creditType.setAdapter(adapter)
     }
 
     companion object {

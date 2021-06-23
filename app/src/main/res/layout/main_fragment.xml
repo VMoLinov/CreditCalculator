@@ -73,45 +73,112 @@
                         android:inputType="number" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.textfield.TextInputLayout
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingStart="@dimen/ic_padding"
-                    android:paddingTop="@dimen/ic_padding"
-                    android:paddingEnd="@dimen/ic_padding"
-                    app:boxCornerRadiusBottomEnd="@dimen/corner_radius"
-                    app:boxCornerRadiusBottomStart="@dimen/corner_radius"
-                    app:boxCornerRadiusTopEnd="@dimen/corner_radius"
-                    app:boxCornerRadiusTopStart="@dimen/corner_radius"
-                    app:endIconMode="clear_text"
-                    app:startIconDrawable="@drawable/ic_time_is_money">
+                    android:orientation="horizontal"
+                    android:paddingTop="@dimen/ic_padding">
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="match_parent"
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:paddingStart="@dimen/ic_padding"
+                        android:paddingEnd="@dimen/buttons_margin"
+                        app:boxCornerRadiusBottomEnd="@dimen/corner_radius"
+                        app:boxCornerRadiusBottomStart="@dimen/corner_radius"
+                        app:boxCornerRadiusTopEnd="@dimen/corner_radius"
+                        app:boxCornerRadiusTopStart="@dimen/corner_radius"
+                        app:endIconMode="clear_text"
+                        app:startIconDrawable="@drawable/ic_time_is_money">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:hint="@string/loan_term"
+                            android:inputType="number" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.button.MaterialButtonToggleGroup
+                        android:id="@+id/loanTermToggleButton"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:hint="@string/loan_term"
-                        android:inputType="number" />
-                </com.google.android.material.textfield.TextInputLayout>
+                        android:layout_weight="1"
+                        android:paddingStart="@dimen/buttons_margin"
+                        android:paddingEnd="@dimen/ic_padding"
+                        app:checkedButton="@id/month"
+                        app:selectionRequired="true"
+                        app:singleSelection="true">
 
-                <com.google.android.material.textfield.TextInputLayout
+                        <Button
+                            android:id="@+id/month"
+                            style="?attr/materialButtonOutlinedStyle"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:text="@string/months" />
+
+                        <Button
+                            android:id="@+id/year"
+                            style="?attr/materialButtonOutlinedStyle"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:text="@string/years" />
+                    </com.google.android.material.button.MaterialButtonToggleGroup>
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingStart="@dimen/ic_padding"
-                    android:paddingTop="@dimen/ic_padding"
-                    android:paddingEnd="@dimen/ic_padding"
-                    app:boxCornerRadiusBottomEnd="@dimen/corner_radius"
-                    app:boxCornerRadiusBottomStart="@dimen/corner_radius"
-                    app:boxCornerRadiusTopEnd="@dimen/corner_radius"
-                    app:boxCornerRadiusTopStart="@dimen/corner_radius"
-                    app:endIconMode="clear_text"
-                    app:startIconDrawable="@drawable/ic_percentage">
+                    android:baselineAligned="false"
+                    android:orientation="horizontal"
+                    android:paddingTop="@dimen/ic_padding">
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="match_parent"
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:paddingStart="@dimen/ic_padding"
+                        android:paddingEnd="@dimen/buttons_margin"
+                        app:boxCornerRadiusBottomEnd="@dimen/corner_radius"
+                        app:boxCornerRadiusBottomStart="@dimen/corner_radius"
+                        app:boxCornerRadiusTopEnd="@dimen/corner_radius"
+                        app:boxCornerRadiusTopStart="@dimen/corner_radius"
+                        app:endIconMode="clear_text"
+                        app:startIconDrawable="@drawable/ic_percentage">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:hint="@string/rate"
+                            android:inputType="numberDecimal" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:hint="@string/rate"
-                        android:inputType="numberDecimal" />
-                </com.google.android.material.textfield.TextInputLayout>
+                        android:layout_weight="1"
+                        android:hint="@string/credit_type"
+                        android:paddingStart="@dimen/buttons_margin"
+                        android:paddingEnd="@dimen/ic_padding"
+                        app:boxCornerRadiusBottomEnd="@dimen/corner_radius"
+                        app:boxCornerRadiusBottomStart="@dimen/corner_radius"
+                        app:boxCornerRadiusTopEnd="@dimen/corner_radius"
+                        app:boxCornerRadiusTopStart="@dimen/corner_radius"
+                        app:boxStrokeWidth="0dp">
+
+                        <AutoCompleteTextView
+                            android:id="@+id/creditType"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="none"
+                            android:maxLines="1"
+                            tools:ignore="LabelFor"
+                            tools:text="классика" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -222,7 +289,7 @@
                         android:enabled="false"
                         android:hint="@string/total"
                         android:textColor="@color/black"
-                        tools:text="2 000 000" />
+                        tools:text="2 500 000" />
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
