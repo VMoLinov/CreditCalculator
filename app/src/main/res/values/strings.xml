@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">CreditCalculator</string>
+    <string name="first_payment">Первый платеж</string>
+    <string name="credit_amount">Сумма кредита</string>
+    <string name="loan_term">Срок кредита, мес</string>
+    <string name="rate">Процентная ставка</string>
+    <string name="calculate">Рассчитать</string>
+    <string name="schedule">График</string>
+    <string name="payment">Платеж</string>
+    <string name="overpayment">Переплата</string>
+    <string name="total">Сумма платежей</string>
 </resources>
