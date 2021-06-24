@@ -1,9 +1,10 @@
-package molinov.creditcalculator
+package molinov.creditcalculator.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import molinov.creditcalculator.R
 import molinov.creditcalculator.databinding.MainActivityBinding
-import molinov.creditcalculator.ui.main.MainFragment
+import molinov.creditcalculator.view.main.MainFragment
 
 class MainActivity : AppCompatActivity() {
 

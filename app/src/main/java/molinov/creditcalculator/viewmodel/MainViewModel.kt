@@ -1,4 +1,4 @@
-package molinov.creditcalculator.ui.main
+package molinov.creditcalculator.viewmodel
 
 import androidx.lifecycle.ViewModel
 
