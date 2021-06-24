@@ -47,10 +47,11 @@
                         android:visibility="gone" />
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/firstPaymentField"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:hint="@string/first_payment"
-                        android:inputType="date" />
+                        android:inputType="none" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -67,6 +68,7 @@
                     app:startIconDrawable="@drawable/ic_money">
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/creditAmountField"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:hint="@string/credit_amount"
@@ -93,6 +95,7 @@
                         app:startIconDrawable="@drawable/ic_time_is_money">
 
                         <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/loanTermField"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:hint="@string/loan_term"
@@ -149,6 +152,7 @@
                         app:startIconDrawable="@drawable/ic_percentage">
 
                         <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/rateField"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:hint="@string/rate"
