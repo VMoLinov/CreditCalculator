@@ -1,15 +1,15 @@
 package molinov.creditcalculator.view.main
 
 import android.annotation.SuppressLint
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.android.material.datepicker.MaterialDatePicker
@@ -62,7 +62,9 @@ class MainFragment : Fragment() {
                         dateParse(firstPaymentField.text.toString()),
                         creditAmountField.text.toString().toInt(),
                         loanTermField.text.toString().toInt(),
-                        rateField.text.toString().toDouble()
+                        rateField.text.toString().toDouble(),
+                        month.isActivated,
+                        creditType.text.toString() == creditTypesItems[0]
                     )
                     viewModel.calculate(data)
                 }
@@ -70,9 +72,7 @@ class MainFragment : Fragment() {
                 Toast.makeText(context, "Заполните все поля", Toast.LENGTH_SHORT).show()
             }
         }
-        viewModel.mainLiveData.observe(viewLifecycleOwner, {
-            renderData(it)
-        })
+        viewModel.mainLiveData.observe(viewLifecycleOwner, { renderData(it) })
     }
 
     private fun renderData(appState: AppState) {
@@ -91,14 +91,15 @@ class MainFragment : Fragment() {
     }
 
     @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
-    @SuppressLint("SimpleDateFormat")
     private fun dateParse(date: String): Date {
         return if (Locale.getDefault() == Locale.US) {
-            SimpleDateFormat(getString(R.string.us_time_pattern)).parse(date)
-        } else SimpleDateFormat(getString(R.string.classic_time_pattern)).parse(date)
+            SimpleDateFormat(getString(R.string.us_time_pattern), Locale.getDefault()).parse(date)
+        } else SimpleDateFormat(
+            getString(R.string.classic_time_pattern),
+            Locale.getDefault()
+        ).parse(date)
     }
 
-    @SuppressLint("SimpleDateFormat") // Why I need this suppressLint?
     private fun editTextClicked() {
         val picker =
             MaterialDatePicker.Builder.datePicker().setTitleText(getString(R.string.choice_date))
@@ -107,8 +108,11 @@ class MainFragment : Fragment() {
             val calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
             calendar.timeInMillis = it
             val formatter =
-                if (Locale.getDefault() == Locale.US) SimpleDateFormat(getString(R.string.us_time_pattern))
-                else SimpleDateFormat(getString(R.string.classic_time_pattern))
+                if (Locale.getDefault() == Locale.US) SimpleDateFormat(
+                    getString(R.string.us_time_pattern),
+                    Locale.getDefault()
+                )
+                else SimpleDateFormat(getString(R.string.classic_time_pattern), Locale.getDefault())
             binding.firstPaymentField.setText(formatter.format(calendar.time)) // Why is setText(), and not simple text = ""?
         }
         picker.show(this.parentFragmentManager, "DATE_PICKER")
