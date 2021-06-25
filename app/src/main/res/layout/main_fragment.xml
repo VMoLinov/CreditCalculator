@@ -37,14 +37,10 @@
                     app:boxCornerRadiusBottomStart="@dimen/corner_radius"
                     app:boxCornerRadiusTopEnd="@dimen/corner_radius"
                     app:boxCornerRadiusTopStart="@dimen/corner_radius"
+                    app:boxStrokeWidth="0dp"
+                    app:boxStrokeWidthFocused="0dp"
                     app:endIconMode="clear_text"
                     app:startIconDrawable="@drawable/ic_calendar">
-
-                    <DatePicker
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:visibility="gone" />
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/firstPaymentField"

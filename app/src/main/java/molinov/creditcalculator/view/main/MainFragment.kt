@@ -15,6 +15,7 @@ import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.android.material.datepicker.MaterialDatePicker
 import molinov.creditcalculator.R
 import molinov.creditcalculator.databinding.MainFragmentBinding
+import molinov.creditcalculator.model.DataFields
 import molinov.creditcalculator.view.schedule.ScheduleFragment
 import molinov.creditcalculator.viewmodel.MainViewModel
 import java.text.SimpleDateFormat
@@ -53,18 +54,43 @@ class MainFragment : Fragment() {
                 Toast.makeText(context, "Заполните все поля", Toast.LENGTH_SHORT).show()
             }
         }
+        binding.calculateBtn.setOnClickListener {
+            if (checkFields()) {
+                binding.apply {
+                    val data = DataFields(
+                        dateParse(firstPaymentField.text.toString()),
+                        creditAmountField.text.toString().toInt(),
+                        loanTermField.text.toString().toInt(),
+                        rateField.text.toString().toDouble()
+                    )
+                    viewModel.calculate(data)
+                }
+            } else {
+                Toast.makeText(context, "Заполните все поля", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
+    @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
     @SuppressLint("SimpleDateFormat")
+    private fun dateParse(date: String): Date {
+        return if (Locale.getDefault() == Locale.US) {
+            SimpleDateFormat(getString(R.string.us_time_pattern)).parse(date)
+        } else SimpleDateFormat(getString(R.string.classic_time_pattern)).parse(date)
+    }
+
+    @SuppressLint("SimpleDateFormat") // Why I need this suppressLint?
     private fun editTextClicked() {
         val picker =
-            MaterialDatePicker.Builder.datePicker().setTitleText("Выберите дату")
+            MaterialDatePicker.Builder.datePicker().setTitleText(getString(R.string.choice_date))
                 .setCalendarConstraints(setConstraints()).setSelection(setDate()).build()
         picker.addOnPositiveButtonClickListener {
             val calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
             calendar.timeInMillis = it
-            val formatter = SimpleDateFormat("dd.MM.yyyy")
-            binding.firstPaymentField.setText(formatter.format(calendar.time))
+            val formatter =
+                if (Locale.getDefault() == Locale.US) SimpleDateFormat(getString(R.string.us_time_pattern))
+                else SimpleDateFormat(getString(R.string.classic_time_pattern))
+            binding.firstPaymentField.setText(formatter.format(calendar.time)) // Why is setText(), and not simple text = ""?
         }
         picker.show(this.parentFragmentManager, "DATE_PICKER")
     }
