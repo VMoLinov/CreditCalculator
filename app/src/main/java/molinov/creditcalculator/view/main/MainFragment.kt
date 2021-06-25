@@ -14,6 +14,7 @@ import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.android.material.datepicker.MaterialDatePicker
 import molinov.creditcalculator.R
+import molinov.creditcalculator.app.AppState
 import molinov.creditcalculator.databinding.MainFragmentBinding
 import molinov.creditcalculator.model.DataFields
 import molinov.creditcalculator.view.schedule.ScheduleFragment
@@ -67,6 +68,24 @@ class MainFragment : Fragment() {
                 }
             } else {
                 Toast.makeText(context, "Заполните все поля", Toast.LENGTH_SHORT).show()
+            }
+        }
+        viewModel.mainLiveData.observe(viewLifecycleOwner, {
+            renderData(it)
+        })
+    }
+
+    private fun renderData(appState: AppState) {
+        when (appState) {
+            is AppState.Success -> {
+                binding.apply {
+                    payment.setText(appState.data.payment)
+                    overPayment.setText(appState.data.overPayment)
+                    totalPayment.setText(appState.data.totalPayment)
+                }
+            }
+            is AppState.Loading -> {
+                //TODO
             }
         }
     }

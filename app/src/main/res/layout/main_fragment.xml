@@ -47,6 +47,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:hint="@string/first_payment"
+                        android:text="25.07.2021"
                         android:inputType="none" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -68,6 +69,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:hint="@string/credit_amount"
+                        android:text="100000"
                         android:inputType="number" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -95,6 +97,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:hint="@string/loan_term"
+                            android:text="12"
                             android:inputType="number" />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -152,6 +155,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:hint="@string/rate"
+                            android:text="5.2"
                             android:inputType="numberDecimal" />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -241,6 +245,7 @@
                     app:startIconDrawable="@drawable/ic_money_1">
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/payment"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:enabled="false"
@@ -263,6 +268,7 @@
                     app:startIconDrawable="@drawable/ic_withdraw">
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/overPayment"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:enabled="false"
@@ -286,6 +292,7 @@
                     app:startIconDrawable="@drawable/ic_bank">
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/totalPayment"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:enabled="false"

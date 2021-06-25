@@ -2,13 +2,13 @@ package molinov.creditcalculator.model
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
+import java.math.BigDecimal
 import java.util.*
 
 @Parcelize
 data class DataFields(
-    private val firstDate: Date,
-    private val amount: Int,
-    private val loanTerm: Int,
-    private val rate: Double
-) : Parcelable {
-}
+    val firstDate: Date,
+    val amount: Int,
+    val loanTerm: Int,
+    val rate: Double
+) : Parcelable
