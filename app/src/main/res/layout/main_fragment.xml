@@ -47,7 +47,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:hint="@string/first_payment"
-                        android:text="25.07.2021"
+                        android:text="25.08.2021"
                         android:inputType="none" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -112,7 +112,7 @@
                         app:selectionRequired="true"
                         app:singleSelection="true">
 
-                        <Button
+                        <com.google.android.material.button.MaterialButton
                             android:id="@+id/month"
                             style="?attr/materialButtonOutlinedStyle"
                             android:layout_width="0dp"
@@ -120,7 +120,7 @@
                             android:layout_weight="1"
                             android:text="@string/months" />
 
-                        <Button
+                        <com.google.android.material.button.MaterialButton
                             android:id="@+id/year"
                             style="?attr/materialButtonOutlinedStyle"
                             android:layout_width="0dp"

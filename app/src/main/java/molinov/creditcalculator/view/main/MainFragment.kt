@@ -63,7 +63,7 @@ class MainFragment : Fragment() {
                         creditAmountField.text.toString().toInt(),
                         loanTermField.text.toString().toInt(),
                         rateField.text.toString().toDouble(),
-                        month.isActivated,
+                        month.isChecked,
                         creditType.text.toString() == creditTypesItems[0]
                     )
                     viewModel.calculate(data)
