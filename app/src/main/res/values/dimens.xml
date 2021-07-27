@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="main_padding">20dp</dimen>
+    <dimen name="edit_text_margin">10dp</dimen>
+    <dimen name="buttons_margin">5dp</dimen>
+    <dimen name="image_width">70dp</dimen>
+    <dimen name="corner_radius">10dp</dimen>
+    <dimen name="toggle_group_margin">-6dp</dimen>
+</resources>
