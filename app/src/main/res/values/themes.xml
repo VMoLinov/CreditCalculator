@@ -12,8 +12,8 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
-        <item name="textInputStyle">@style/Shape</item>
-        <item name="android:alpha">@style/Alpha</item>
+<!--        <item name="textInputStyle">@style/Shape</item>-->
+<!--        <item name="android:alpha">@style/Alpha</item>-->
     </style>
 
     <style name="Shape" parent="Widget.MaterialComponents.TextInputLayout.FilledBox">

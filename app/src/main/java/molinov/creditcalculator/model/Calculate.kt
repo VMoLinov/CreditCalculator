@@ -72,10 +72,9 @@ fun computeDifferentiated(
             val delta = daysCount.timeInMillis - date
             val daysInMonth = delta.toBigDecimal() / MILLIS_IN_A_DAY
             percentPaymentList.add(
-                (amount - (basePayment.times(month.toBigDecimal()))
+                ((amount - (basePayment.times(month.toBigDecimal()))
                         - percentPaymentSummary(percentPaymentList))
-                        * daysInMonth * dayRate
-                    .setLowScale()
+                        * daysInMonth * dayRate).setLowScale()
             )
         }
     }
