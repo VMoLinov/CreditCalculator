@@ -5,7 +5,6 @@ import kotlinx.parcelize.Parcelize
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.util.*
-import kotlin.math.pow
 
 @Parcelize
 data class Calculate(
@@ -16,46 +15,52 @@ data class Calculate(
 
 private const val US_TIME_FORMAT = "MM.dd.yyyy"
 private const val CLASSIC_TIME_FORMAT = "dd.MM.yyyy"
+private const val LOW_SCALE = 2
+private const val BIG_SCALE = 10
+private val MONTHS = BigDecimal(12).setLowScale()
+private val PERCENTS = BigDecimal(100).setLowScale()
+private val DAYS_IN_YEAR = BigDecimal(365).setLowScale()
+private val MILLIS_IN_A_DAY = BigDecimal(86400000).setLowScale()
+private val ONE = BigDecimal(1).setLowScale()
 
 fun parseDataToCalculate(data: DataFields): Calculate {
-//    val payment = data.run { amount * (rate / (1 + rate) - loanTerm - 1) }
-    val monthRate = data.rate.div(12).div(100)
+    val monthRate = data.rate.setBigScale() / (MONTHS * PERCENTS)
     val loanTerm = data.run {
-        // convert ages to months if need
         if (isMonths) loanTerm
-        else (loanTerm * 12)
+        else (loanTerm * MONTHS)
     }
     if (data.isAnnuity) {
-        val ratio = (1 + monthRate).pow(loanTerm.toDouble())
-        val payment =
-            (data.amount * (monthRate * ratio).div((ratio) - 1)).toBigDecimal().setLowScale()
-        val totalPayment = payment.multiply(loanTerm.toBigDecimal()).setLowScale()
-        val overPayment = totalPayment.minus(data.amount.toBigDecimal()).setLowScale()
+        val ratio = (ONE + monthRate).pow(loanTerm.toInt())
+        val payment = (data.amount * (monthRate * ratio) / ((ratio) - ONE)).setLowScale()
+        val totalPayment = (payment * loanTerm).setLowScale()
+        val overPayment = totalPayment - data.amount
         return Calculate(payment.toString(), overPayment.toString(), totalPayment.toString())
     } else {
         var maximum = BigDecimal(0).setLowScale()
         var minimum = BigDecimal(1000000).setLowScale()
         val percentPayment: MutableList<BigDecimal> = mutableListOf()
-        val basePayment = (data.amount / loanTerm).toBigDecimal().setLowScale()
+        val basePayment = (data.amount / loanTerm).setLowScale()
         data.apply {
-            val diff = (firstDate.time - System.currentTimeMillis()) / 1000
-            val daysBeforeFirstPayment = (diff / 86400).toInt()
-            val dayRate = data.rate.div(365).div(100)
+            val daysBeforeFirstPayment =
+                (firstDate.time - System.currentTimeMillis()).toBigDecimal()
+                    .div(MILLIS_IN_A_DAY)
+                    .setScale(0)
+            val dayRate = data.rate.setBigScale().div(DAYS_IN_YEAR).div(PERCENTS)
             percentPayment.add(
-                (amount * daysBeforeFirstPayment * dayRate).toBigDecimal().setLowScale()
+                (amount * daysBeforeFirstPayment * dayRate).setLowScale()
             )
             val daysCount = Calendar.getInstance()
             daysCount.time = firstDate
-            daysCount.add(Calendar.DAY_OF_MONTH, daysBeforeFirstPayment)
-            for (month in 1 until loanTerm) {
+            daysCount.add(Calendar.DAY_OF_MONTH, daysBeforeFirstPayment.toInt())
+            for (month in 1 until loanTerm.toInt()) {
                 val date = daysCount.timeInMillis
                 daysCount.add(Calendar.MONTH, 1)
                 val delta = daysCount.timeInMillis - date
                 val daysInMonth = delta / 86400000
                 percentPayment.add(
-                    ((amount.toBigDecimal() - (basePayment.times(month.toBigDecimal())) - percentPayment(
+                    ((amount - (basePayment.times(month.toBigDecimal())) - percentPayment(
                         percentPayment
-                    )) * daysInMonth.toBigDecimal() * dayRate.toBigDecimal()).setLowScale()
+                    )) * daysInMonth.toBigDecimal() * dayRate).setLowScale()
                 )
             }
             for (item in percentPayment) {
@@ -66,7 +71,7 @@ fun parseDataToCalculate(data: DataFields): Calculate {
         return Calculate(
             (maximum + basePayment).toString() + "..." + (minimum + basePayment).toString(),
             percentPayment(percentPayment).toString(),
-            ((basePayment.times(loanTerm.toBigDecimal())) + percentPayment(percentPayment)).toString()
+            ((basePayment.times(loanTerm)) + percentPayment(percentPayment)).toString()
         )
     }
 }
@@ -77,4 +82,6 @@ fun percentPayment(percentPayment: MutableList<BigDecimal>): BigDecimal {
     return count
 }
 
-fun BigDecimal.setLowScale(): BigDecimal = setScale(2, RoundingMode.HALF_UP)
+fun BigDecimal.setLowScale(): BigDecimal = setScale(LOW_SCALE, RoundingMode.HALF_UP)
+
+fun BigDecimal.setBigScale(): BigDecimal = setScale(BIG_SCALE, RoundingMode.HALF_UP)

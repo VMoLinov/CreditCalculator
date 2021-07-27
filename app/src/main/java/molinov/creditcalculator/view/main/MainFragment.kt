@@ -60,9 +60,9 @@ class MainFragment : Fragment() {
                 binding.apply {
                     val data = DataFields(
                         dateParse(firstPaymentField.text.toString()),
-                        creditAmountField.text.toString().toInt(),
-                        loanTermField.text.toString().toInt(),
-                        rateField.text.toString().toDouble(),
+                        creditAmountField.text.toString().toBigDecimal().setScale(2),
+                        loanTermField.text.toString().toBigDecimal().setScale(2),
+                        rateField.text.toString().toBigDecimal().setScale(2),
                         month.isChecked,
                         creditType.text.toString() == creditTypesItems[0]
                     )
@@ -153,7 +153,7 @@ class MainFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         val adapter = ArrayAdapter(requireContext(), R.layout.list_item, creditTypesItems)
-        binding.creditType.setText(creditTypesItems[0])
+        binding.creditType.setText(creditTypesItems[1])
         binding.creditType.setAdapter(adapter)
     }
 
