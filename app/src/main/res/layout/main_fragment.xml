@@ -1,96 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".view.main.MainFragment">
+    android:layout_height="match_parent">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
+        <FrameLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/ic_padding"
-            android:backgroundTint="@android:color/darker_gray"
-            app:cardCornerRadius="@dimen/edit_text_margin"
-            app:strokeColor="@color/black"
-            app:strokeWidth="4dp">
+            android:paddingTop="@dimen/main_padding"
+            android:paddingEnd="@dimen/main_padding"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="RtlSymmetry">
 
-            <LinearLayout
+            <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <com.google.android.material.textfield.TextInputLayout
+                <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingStart="@dimen/ic_padding"
-                    android:paddingTop="@dimen/ic_padding"
-                    android:paddingEnd="@dimen/ic_padding"
-                    app:boxCornerRadiusBottomEnd="@dimen/corner_radius"
-                    app:boxCornerRadiusBottomStart="@dimen/corner_radius"
-                    app:boxCornerRadiusTopEnd="@dimen/corner_radius"
-                    app:boxCornerRadiusTopStart="@dimen/corner_radius"
-                    app:endIconMode="clear_text"
-                    app:startIconDrawable="@drawable/ic_calendar">
+                    android:orientation="horizontal">
 
-                    <DatePicker
+                    <androidx.appcompat.widget.AppCompatImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:visibility="gone" />
+                        android:alpha="0.54"
+                        android:paddingStart="@dimen/main_padding"
+                        android:paddingEnd="@dimen/main_padding"
+                        android:src="@drawable/ic_calendar" />
 
-                    <com.google.android.material.textfield.TextInputEditText
+                    <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:hint="@string/first_payment"
-                        android:inputType="date" />
-                </com.google.android.material.textfield.TextInputLayout>
+                        android:layout_height="wrap_content"
+                        app:endIconMode="clear_text">
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingStart="@dimen/ic_padding"
-                    android:paddingTop="@dimen/ic_padding"
-                    android:paddingEnd="@dimen/ic_padding"
-                    app:boxCornerRadiusBottomEnd="@dimen/corner_radius"
-                    app:boxCornerRadiusBottomStart="@dimen/corner_radius"
-                    app:boxCornerRadiusTopEnd="@dimen/corner_radius"
-                    app:boxCornerRadiusTopStart="@dimen/corner_radius"
-                    app:endIconMode="clear_text"
-                    app:startIconDrawable="@drawable/ic_money">
+                        <DatePicker
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:visibility="gone" />
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:hint="@string/credit_amount"
-                        android:inputType="number" />
-                </com.google.android.material.textfield.TextInputLayout>
+                        <com.google.android.material.textfield.TextInputEditText
+                            style="@style/ShapeAppearance.MaterialComponents.SmallComponent"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:hint="@string/first_payment"
+                            android:inputType="date" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                </androidx.appcompat.widget.LinearLayoutCompat>
 
-                <LinearLayout
+                <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:paddingTop="@dimen/ic_padding">
+                    android:paddingTop="@dimen/main_padding">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:alpha="0.54"
+                        android:paddingStart="@dimen/main_padding"
+                        android:paddingEnd="@dimen/main_padding"
+                        android:src="@drawable/ic_money" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:endIconMode="clear_text">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:hint="@string/credit_amount"
+                            android:inputType="number" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingTop="@dimen/main_padding">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:alpha="0.54"
+                        android:paddingStart="@dimen/main_padding"
+                        android:paddingEnd="@dimen/main_padding"
+                        android:src="@drawable/ic_time_is_money" />
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:paddingStart="@dimen/ic_padding"
                         android:paddingEnd="@dimen/buttons_margin"
-                        app:boxCornerRadiusBottomEnd="@dimen/corner_radius"
-                        app:boxCornerRadiusBottomStart="@dimen/corner_radius"
-                        app:boxCornerRadiusTopEnd="@dimen/corner_radius"
-                        app:boxCornerRadiusTopStart="@dimen/corner_radius"
-                        app:endIconMode="clear_text"
-                        app:startIconDrawable="@drawable/ic_time_is_money">
+                        app:endIconMode="clear_text">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:layout_width="match_parent"
@@ -100,17 +116,17 @@
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.button.MaterialButtonToggleGroup
-                        android:id="@+id/loanTermToggleButton"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
+                        android:layout_marginTop="@dimen/toggle_group_margin"
+                        android:layout_marginBottom="@dimen/toggle_group_margin"
                         android:layout_weight="1"
                         android:paddingStart="@dimen/buttons_margin"
-                        android:paddingEnd="@dimen/ic_padding"
                         app:checkedButton="@id/month"
                         app:selectionRequired="true"
                         app:singleSelection="true">
 
-                        <Button
+                        <com.google.android.material.button.MaterialButton
                             android:id="@+id/month"
                             style="?attr/materialButtonOutlinedStyle"
                             android:layout_width="0dp"
@@ -118,7 +134,7 @@
                             android:layout_weight="1"
                             android:text="@string/months" />
 
-                        <Button
+                        <com.google.android.material.button.MaterialButton
                             android:id="@+id/year"
                             style="?attr/materialButtonOutlinedStyle"
                             android:layout_width="0dp"
@@ -126,27 +142,30 @@
                             android:layout_weight="1"
                             android:text="@string/years" />
                     </com.google.android.material.button.MaterialButtonToggleGroup>
-                </LinearLayout>
+                </androidx.appcompat.widget.LinearLayoutCompat>
 
-                <LinearLayout
+                <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:baselineAligned="false"
                     android:orientation="horizontal"
-                    android:paddingTop="@dimen/ic_padding">
+                    android:paddingTop="@dimen/main_padding">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:alpha="0.54"
+                        android:paddingStart="@dimen/main_padding"
+                        android:paddingEnd="@dimen/main_padding"
+                        android:src="@drawable/ic_percentage" />
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:paddingStart="@dimen/ic_padding"
                         android:paddingEnd="@dimen/buttons_margin"
-                        app:boxCornerRadiusBottomEnd="@dimen/corner_radius"
-                        app:boxCornerRadiusBottomStart="@dimen/corner_radius"
-                        app:boxCornerRadiusTopEnd="@dimen/corner_radius"
-                        app:boxCornerRadiusTopStart="@dimen/corner_radius"
                         app:endIconMode="clear_text"
-                        app:startIconDrawable="@drawable/ic_percentage">
+                        app:prefixText="@string/percent_sign">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:layout_width="match_parent"
@@ -162,32 +181,37 @@
                         android:layout_weight="1"
                         android:hint="@string/credit_type"
                         android:paddingStart="@dimen/buttons_margin"
-                        android:paddingEnd="@dimen/ic_padding"
-                        app:boxCornerRadiusBottomEnd="@dimen/corner_radius"
-                        app:boxCornerRadiusBottomStart="@dimen/corner_radius"
-                        app:boxCornerRadiusTopEnd="@dimen/corner_radius"
-                        app:boxCornerRadiusTopStart="@dimen/corner_radius"
                         app:boxStrokeWidth="0dp">
 
                         <AutoCompleteTextView
                             android:id="@+id/creditType"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:ellipsize="end"
                             android:inputType="none"
                             android:maxLines="1"
+                            android:singleLine="true"
                             tools:ignore="LabelFor"
-                            tools:text="классика" />
+                            tools:text="дифференцированный" />
+                        <!-- singleLine is deprecated-->
                     </com.google.android.material.textfield.TextInputLayout>
-                </LinearLayout>
+                </androidx.appcompat.widget.LinearLayoutCompat>
 
-                <LinearLayout
+                <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
                     android:orientation="horizontal"
-                    android:paddingStart="@dimen/ic_padding"
-                    android:paddingTop="@dimen/ic_padding"
-                    android:paddingEnd="@dimen/ic_padding">
+                    android:paddingTop="@dimen/main_padding">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:alpha="0.54"
+                        android:paddingStart="@dimen/main_padding"
+                        android:paddingEnd="@dimen/main_padding"
+                        android:src="@drawable/ic_percentage"
+                        android:visibility="invisible" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/calculateBtn"
@@ -195,7 +219,6 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginEnd="@dimen/buttons_margin"
-                        android:layout_marginBottom="@dimen/buttons_margin"
                         android:layout_weight="1"
                         android:text="@string/calculate" />
 
@@ -205,95 +228,100 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginStart="@dimen/buttons_margin"
-                        android:layout_marginBottom="@dimen/buttons_margin"
                         android:layout_weight="1"
                         android:text="@string/schedule" />
-                </LinearLayout>
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
+                </androidx.appcompat.widget.LinearLayoutCompat>
 
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/ic_padding"
-            android:layout_marginEnd="@dimen/ic_padding"
-            android:backgroundTint="@android:color/darker_gray"
-            app:cardCornerRadius="@dimen/edit_text_margin"
-            app:strokeColor="@color/black"
-            app:strokeWidth="4dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <com.google.android.material.textfield.TextInputLayout
+                <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingStart="@dimen/ic_padding"
-                    android:paddingTop="@dimen/ic_padding"
-                    android:paddingEnd="@dimen/ic_padding"
-                    app:boxCornerRadiusBottomEnd="@dimen/corner_radius"
-                    app:boxCornerRadiusBottomStart="@dimen/corner_radius"
-                    app:boxCornerRadiusTopEnd="@dimen/corner_radius"
-                    app:boxCornerRadiusTopStart="@dimen/corner_radius"
-                    app:boxStrokeWidth="0dp"
-                    app:startIconDrawable="@drawable/ic_money_1">
+                    android:orientation="horizontal"
+                    android:paddingTop="@dimen/main_padding">
 
-                    <com.google.android.material.textfield.TextInputEditText
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:alpha="0.54"
+                        android:paddingStart="@dimen/main_padding"
+                        android:paddingEnd="@dimen/main_padding"
+                        android:src="@drawable/ic_money_1" />
+
+                    <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:enabled="false"
                         android:hint="@string/payment"
-                        android:textColor="@color/black"
-                        tools:text="35 000" />
-                </com.google.android.material.textfield.TextInputLayout>
+                        app:boxStrokeWidth="0dp">
 
-                <com.google.android.material.textfield.TextInputLayout
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:enabled="false"
+                            android:textColor="@color/black"
+                            tools:text="35 000" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+                <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingStart="@dimen/ic_padding"
-                    android:paddingTop="@dimen/ic_padding"
-                    android:paddingEnd="@dimen/ic_padding"
-                    app:boxCornerRadiusBottomEnd="@dimen/corner_radius"
-                    app:boxCornerRadiusBottomStart="@dimen/corner_radius"
-                    app:boxCornerRadiusTopEnd="@dimen/corner_radius"
-                    app:boxCornerRadiusTopStart="@dimen/corner_radius"
-                    app:boxStrokeWidth="0dp"
-                    app:startIconDrawable="@drawable/ic_withdraw">
+                    android:orientation="horizontal"
+                    android:paddingTop="@dimen/main_padding">
 
-                    <com.google.android.material.textfield.TextInputEditText
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:alpha="0.54"
+                        android:paddingStart="@dimen/main_padding"
+                        android:paddingEnd="@dimen/main_padding"
+                        android:src="@drawable/ic_withdraw" />
+
+                    <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:enabled="false"
                         android:hint="@string/overpayment"
-                        android:textColor="@color/black"
-                        tools:text="200 000" />
-                </com.google.android.material.textfield.TextInputLayout>
+                        app:boxStrokeWidth="0dp">
 
-                <com.google.android.material.textfield.TextInputLayout
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:enabled="false"
+                            android:textColor="@color/black"
+                            tools:text="200 000" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+                <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingStart="@dimen/ic_padding"
-                    android:paddingTop="@dimen/ic_padding"
-                    android:paddingEnd="@dimen/ic_padding"
-                    android:paddingBottom="@dimen/ic_padding"
-                    app:boxCornerRadiusBottomEnd="@dimen/corner_radius"
-                    app:boxCornerRadiusBottomStart="@dimen/corner_radius"
-                    app:boxCornerRadiusTopEnd="@dimen/corner_radius"
-                    app:boxCornerRadiusTopStart="@dimen/corner_radius"
-                    app:boxStrokeWidth="0dp"
-                    app:startIconDrawable="@drawable/ic_bank">
+                    android:orientation="horizontal"
+                    android:paddingTop="@dimen/main_padding">
 
-                    <com.google.android.material.textfield.TextInputEditText
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:alpha="0.54"
+                        android:paddingStart="@dimen/main_padding"
+                        android:paddingEnd="@dimen/main_padding"
+                        android:src="@drawable/ic_bank" />
+
+                    <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:enabled="false"
                         android:hint="@string/total"
-                        android:textColor="@color/black"
-                        tools:text="2 500 000" />
-                </com.google.android.material.textfield.TextInputLayout>
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-    </LinearLayout>
-</ScrollView>
+                        app:boxStrokeWidth="0dp">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:enabled="false"
+                            android:textColor="@color/black"
+                            tools:text="2 500 000" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                </androidx.appcompat.widget.LinearLayoutCompat>
+            </androidx.appcompat.widget.LinearLayoutCompat>
+        </FrameLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

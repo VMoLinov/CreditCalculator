@@ -12,4 +12,5 @@
     <string name="months">мес</string>
     <string name="years">лет</string>
     <string name="credit_type">Тип кредита</string>
+    <string name="percent_sign">%</string>
 </resources>
