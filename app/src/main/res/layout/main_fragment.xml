@@ -28,7 +28,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
-
                     <androidx.appcompat.widget.AppCompatImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -63,7 +62,6 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:paddingTop="@dimen/main_padding">
-
                     <androidx.appcompat.widget.AppCompatImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -109,9 +107,11 @@
                         app:endIconMode="clear_text">
 
                         <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/loanTermField"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:hint="@string/loan_term"
+                            android:text="12"
                             android:inputType="number" />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -168,9 +168,11 @@
                         app:prefixText="@string/percent_sign">
 
                         <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/rateField"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:hint="@string/rate"
+                            android:text="5.2"
                             android:inputType="numberDecimal" />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -237,7 +239,6 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:paddingTop="@dimen/main_padding">
-
                     <androidx.appcompat.widget.AppCompatImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -248,6 +249,7 @@
                         android:src="@drawable/ic_money_1" />
 
                     <com.google.android.material.textfield.TextInputLayout
+
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/payment"
@@ -278,6 +280,7 @@
                         android:src="@drawable/ic_withdraw" />
 
                     <com.google.android.material.textfield.TextInputLayout
+
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/overpayment"
@@ -308,6 +311,7 @@
                         android:src="@drawable/ic_bank" />
 
                     <com.google.android.material.textfield.TextInputLayout
+
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/total"

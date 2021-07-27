@@ -1,13 +1,13 @@
 package molinov.creditcalculator.view.schedule
 
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import molinov.creditcalculator.viewmodel.ScheduleViewModel
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import molinov.creditcalculator.databinding.ScheduleFragmentBinding
+import molinov.creditcalculator.viewmodel.ScheduleViewModel
 
 class ScheduleFragment : Fragment() {
 
