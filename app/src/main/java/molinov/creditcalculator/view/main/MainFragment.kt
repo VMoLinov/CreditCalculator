@@ -17,6 +17,7 @@ import molinov.creditcalculator.R
 import molinov.creditcalculator.app.AppState
 import molinov.creditcalculator.databinding.MainFragmentBinding
 import molinov.creditcalculator.model.DataFields
+import molinov.creditcalculator.model.setLowScale
 import molinov.creditcalculator.view.schedule.ScheduleFragment
 import molinov.creditcalculator.viewmodel.MainViewModel
 import java.text.SimpleDateFormat
@@ -60,9 +61,9 @@ class MainFragment : Fragment() {
                 binding.apply {
                     val data = DataFields(
                         dateParse(firstPaymentField.text.toString()),
-                        creditAmountField.text.toString().toBigDecimal().setScale(2),
-                        loanTermField.text.toString().toBigDecimal().setScale(2),
-                        rateField.text.toString().toBigDecimal().setScale(2),
+                        creditAmountField.text.toString().toBigDecimal().setLowScale(),
+                        loanTermField.text.toString().toBigDecimal().setLowScale(),
+                        rateField.text.toString().toBigDecimal().setLowScale(),
                         month.isChecked,
                         creditType.text.toString() == creditTypesItems[0]
                     )
@@ -90,14 +91,16 @@ class MainFragment : Fragment() {
         }
     }
 
-    @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
     private fun dateParse(date: String): Date {
         return if (Locale.getDefault() == Locale.US) {
-            SimpleDateFormat(getString(R.string.us_time_pattern), Locale.getDefault()).parse(date)
+            SimpleDateFormat(
+                resources.getString(R.string.us_time_pattern),
+                Locale.US
+            ).parse(date) ?: Date()
         } else SimpleDateFormat(
             getString(R.string.classic_time_pattern),
             Locale.getDefault()
-        ).parse(date)
+        ).parse(date) ?: Date()
     }
 
     private fun editTextClicked() {
@@ -113,7 +116,7 @@ class MainFragment : Fragment() {
                     Locale.getDefault()
                 )
                 else SimpleDateFormat(getString(R.string.classic_time_pattern), Locale.getDefault())
-            binding.firstPaymentField.setText(formatter.format(calendar.time)) // Why is setText(), and not simple text = ""?
+            binding.firstPaymentField.setText(formatter.format(calendar.time))
         }
         picker.show(this.parentFragmentManager, "DATE_PICKER")
     }
@@ -153,7 +156,7 @@ class MainFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         val adapter = ArrayAdapter(requireContext(), R.layout.list_item, creditTypesItems)
-        binding.creditType.setText(creditTypesItems[1])
+        binding.creditType.setText(creditTypesItems[0])
         binding.creditType.setAdapter(adapter)
     }
 
