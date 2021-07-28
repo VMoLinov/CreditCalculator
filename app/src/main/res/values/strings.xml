@@ -16,4 +16,10 @@
     <string name="us_time_pattern">MM.dd.yyyy</string>
     <string name="choice_date">Выберите дату</string>
     <string name="percent_sign">%</string>
+    <string name="nole_ahead">Ноль не может быть первым числом</string>
+    <string name="nole_ahead_small">Не ноль</string>
+    <string-array name="credit_types">
+        <item>аннуитет</item>
+        <item>дифференцированный</item>
+    </string-array>
 </resources>

@@ -6,4 +6,7 @@
     <dimen name="image_width">70dp</dimen>
     <dimen name="corner_radius">10dp</dimen>
     <dimen name="toggle_group_margin">-6dp</dimen>
+    <dimen name="three">3</dimen>
+    <dimen name="four">4</dimen>
+    <!-- is it correct margin? -->
 </resources>

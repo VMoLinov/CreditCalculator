@@ -1,18 +1,25 @@
 package molinov.creditcalculator.view.main
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.os.Build
 import android.os.Bundle
+import android.text.Editable
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.annotation.RequiresApi
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.textfield.TextInputLayout
 import molinov.creditcalculator.R
 import molinov.creditcalculator.app.AppState
 import molinov.creditcalculator.databinding.MainFragmentBinding
@@ -25,12 +32,10 @@ import java.util.*
 
 class MainFragment : Fragment() {
 
-    private val creditTypesItems = listOf("аннуитет", "классика")
     private var _binding: MainFragmentBinding? = null
     private val binding get() = _binding!!
-    private val viewModel: MainViewModel by lazy {
-        ViewModelProvider(this).get(MainViewModel::class.java)
-    }
+    private val creditTypes: Array<String> by lazy { resources.getStringArray(R.array.credit_types) }
+    private val viewModel: MainViewModel by lazy { ViewModelProvider(this).get(MainViewModel::class.java) }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,49 +45,78 @@ class MainFragment : Fragment() {
         return binding.root
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.firstPaymentField.setOnTouchListener { _, event ->
-            if (MotionEvent.ACTION_UP == event.action) {
-                editTextClicked()
+        binding.apply {
+            firstPaymentField.editText?.setOnTouchListener { _, event ->
+                if (MotionEvent.ACTION_UP == event?.action) editTextClicked()
+                return@setOnTouchListener false
             }
-            return@setOnTouchListener false
-        }
-        binding.scheduleBtn.setOnClickListener {
-            if (checkFields()) {
-                openSchedule()
-            } else {
-                Toast.makeText(context, "Заполните все поля", Toast.LENGTH_SHORT).show()
+            firstPaymentField.onFocusChangeListener =
+                View.OnFocusChangeListener { _, _ -> }
+            scheduleBtn.setOnClickListener {
+                if (checkFields()) {
+                    openSchedule()
+                    hideKeyboard(requireContext(), view)
+                } else {
+                    Toast.makeText(context, "Заполните все поля", Toast.LENGTH_SHORT).show()
+                }
             }
-        }
-        binding.calculateBtn.setOnClickListener {
-            if (checkFields()) {
-                binding.apply {
+            calculateBtn.setOnClickListener {
+                if (checkFields()) {
                     val data = DataFields(
-                        dateParse(firstPaymentField.text.toString()),
-                        creditAmountField.text.toString().toBigDecimal().setLowScale(),
-                        loanTermField.text.toString().toBigDecimal().setLowScale(),
-                        rateField.text.toString().toBigDecimal().setLowScale(),
+                        dateParse(firstPaymentField.editText?.text.toString()),
+                        creditAmountField.editText?.text.toString().toBigDecimal()
+                            .setLowScale(),
+                        loanTermField.editText?.text.toString().toBigDecimal().setLowScale(),
+                        rateField.editText?.text.toString().toBigDecimal().setLowScale(),
                         month.isChecked,
-                        creditType.text.toString() == creditTypesItems[0]
+                        creditType.text.toString() == creditTypes[0]
                     )
                     viewModel.calculate(data)
+                    hideKeyboard(requireContext(), view)
                 }
-            } else {
-                Toast.makeText(context, "Заполните все поля", Toast.LENGTH_SHORT).show()
             }
+            creditAmountField.editText?.addTextChangedListener {
+                creditAmountField.apply {
+                    if (it.toString().startsWith("0")) {
+                        it?.clear()
+                        error = resources.getString(R.string.nole_ahead)
+                        isErrorEnabled = true
+                    } else isErrorEnabled = false
+                }
+            }
+            loanTermField.editText?.addTextChangedListener { zeroSmallListener(it, loanTermField) }
+            rateField.editText?.addTextChangedListener { zeroSmallListener(it, rateField) }
         }
         viewModel.mainLiveData.observe(viewLifecycleOwner, { renderData(it) })
+    }
+
+    private fun hideKeyboard(context: Context, view: View) {
+        val imm: InputMethodManager =
+            context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(view.windowToken, 0)
+    }
+
+    private fun zeroSmallListener(it: Editable?, view: TextInputLayout) {
+        view.apply {
+            if (it.toString().startsWith("0")) {
+                it?.clear()
+                error = resources.getString(R.string.nole_ahead_small)
+                isErrorEnabled = true
+            } else isErrorEnabled = false
+        }
     }
 
     private fun renderData(appState: AppState) {
         when (appState) {
             is AppState.Success -> {
                 binding.apply {
-                    payment.setText(appState.data.payment)
-                    overPayment.setText(appState.data.overPayment)
-                    totalPayment.setText(appState.data.totalPayment)
+                    payment.editText?.setText(appState.data.payment)
+                    overPayment.editText?.setText(appState.data.overPayment)
+                    totalPayment.editText?.setText(appState.data.totalPayment)
                 }
             }
             is AppState.Loading -> {
@@ -116,7 +150,7 @@ class MainFragment : Fragment() {
                     Locale.getDefault()
                 )
                 else SimpleDateFormat(getString(R.string.classic_time_pattern), Locale.getDefault())
-            binding.firstPaymentField.setText(formatter.format(calendar.time))
+            binding.firstPaymentField.editText?.setText(formatter.format(calendar.time))
         }
         picker.show(this.parentFragmentManager, "DATE_PICKER")
     }
@@ -135,8 +169,8 @@ class MainFragment : Fragment() {
 
     private fun checkFields(): Boolean {
         binding.apply {
-            if (firstPaymentField.text.isNullOrEmpty() || creditAmountField.text.isNullOrEmpty()
-                || loanTermField.text.isNullOrEmpty() || rateField.text.isNullOrEmpty()
+            if (firstPaymentField.editText?.text.isNullOrEmpty() || creditAmountField.editText?.text.isNullOrEmpty()
+                || loanTermField.editText?.text.isNullOrEmpty() || rateField.editText?.text.isNullOrEmpty()
             ) {
                 return false
             }
@@ -155,8 +189,9 @@ class MainFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        val adapter = ArrayAdapter(requireContext(), R.layout.list_item, creditTypesItems)
-        binding.creditType.setText(creditTypesItems[0])
+
+        val adapter = ArrayAdapter(requireContext(), R.layout.list_item, creditTypes)
+        binding.creditType.setText(creditTypes[0])
         binding.creditType.setAdapter(adapter)
     }
 
