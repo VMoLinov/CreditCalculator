@@ -37,4 +37,7 @@
         <item>Ноль не может быть первым числом</item>
         <item>Значение не может начинаться с точки</item>
     </string-array>
+    <string name="main_fragment">Главная</string>
+    <string name="schedule_fragment">График</string>
+    <string name="title_notifications">Нотификации</string>
 </resources>

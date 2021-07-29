@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import molinov.creditcalculator.databinding.ScheduleFragmentBinding
+import molinov.creditcalculator.view.main.MainFragmentArgs
 import molinov.creditcalculator.viewmodel.ScheduleViewModel
 
 class ScheduleFragment : Fragment() {
@@ -23,14 +24,14 @@ class ScheduleFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = ScheduleFragmentBinding.inflate(inflater, container, false)
+        binding.scheduleFragmentRecyclerView.adapter = adapter
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.scheduleFragmentRecyclerView.adapter = adapter
+        val data = MainFragmentArgs.fromBundle(requireArguments()).data
         viewModel.scheduleLiveData.observe(viewLifecycleOwner, {
-
         })
     }
 

@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.Navigation
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.android.material.datepicker.MaterialDatePicker
@@ -22,7 +23,6 @@ import molinov.creditcalculator.app.AppState
 import molinov.creditcalculator.databinding.MainFragmentBinding
 import molinov.creditcalculator.model.DataFields
 import molinov.creditcalculator.model.setLowScale
-import molinov.creditcalculator.view.schedule.ScheduleFragment
 import molinov.creditcalculator.viewmodel.MainViewModel
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
@@ -47,7 +47,6 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         viewModel.mainLiveData.observe(viewLifecycleOwner, { renderData(it) })
     }
 
@@ -61,6 +60,7 @@ class MainFragment : Fragment() {
             // I try focused, focusedInTouchMode, clicked = true, not work.
             nestedScrollMain.setOnTouchListener { _, _ ->
                 requireActivity().currentFocus?.clearFocus()
+                hideKeyboard(requireContext(), requireView())
                 return@setOnTouchListener true
             }
             firstPaymentField.editText?.setOnTouchListener { _, event ->
@@ -69,9 +69,11 @@ class MainFragment : Fragment() {
             }
             scheduleBtn.setOnClickListener {
                 if (checkFields()) {
-                    openSchedule()
                     requireActivity().currentFocus?.clearFocus()
-                    hideKeyboard(requireContext(), it)
+                    val action = MainFragmentDirections.actionMainFragmentToScheduleFragment(
+                        collectDataFields(binding)
+                    )
+                    Navigation.findNavController(it).navigate(action)
                 } else {
                     Toast.makeText(
                         context,
@@ -83,15 +85,7 @@ class MainFragment : Fragment() {
             calculateBtn.setOnClickListener {
                 if (checkFields()) {
                     requireActivity().currentFocus?.clearFocus()
-                    val amount = creditAmountField.editText?.text.toString().replace(" ", "")
-                    val data = DataFields(
-                        dateParse(firstPaymentField.editText?.text.toString()),
-                        amount.toBigDecimal().setLowScale(),
-                        loanTermField.editText?.text.toString().toBigDecimal().setLowScale(),
-                        rateField.editText?.text.toString().toBigDecimal().setLowScale(),
-                        month.isChecked,
-                        creditType.text.toString() == creditTypes[0]
-                    )
+                    val data = collectDataFields(binding)
                     viewModel.calculate(data)
                     hideKeyboard(requireContext(), it)
                 } else {
@@ -150,6 +144,18 @@ class MainFragment : Fragment() {
                 true
             )
         }
+    }
+
+    private fun collectDataFields(b: MainFragmentBinding): DataFields {
+        val amount = b.creditAmountField.editText?.text.toString().replace(" ", "")
+        return DataFields(
+            dateParse(b.firstPaymentField.editText?.text.toString()),
+            amount.toBigDecimal().setLowScale(),
+            b.loanTermField.editText?.text.toString().toBigDecimal().setLowScale(),
+            b.rateField.editText?.text.toString().toBigDecimal().setLowScale(),
+            b.month.isChecked,
+            b.creditType.text.toString() == creditTypes[0]
+        )
     }
 
     private fun TextInputLayout.setKeyboardAction(action: Int, string: String, pressBtn: Boolean) {
@@ -276,28 +282,15 @@ class MainFragment : Fragment() {
         }
     }
 
-    private fun openSchedule() {
-        parentFragmentManager.apply {
-            beginTransaction()
-                .replace(R.id.container, ScheduleFragment.newInstance())
-                .addToBackStack("")
-                .commit()
-        }
-    }
-
     override fun onResume() {
-        super.onResume()
         val adapter = ArrayAdapter(requireContext(), R.layout.list_item, creditTypes)
         binding.creditType.setText(creditTypes[0])
         binding.creditType.setAdapter(adapter)
+        super.onResume()
     }
 
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
-    }
-
-    companion object {
-        fun newInstance() = MainFragment()
     }
 }
