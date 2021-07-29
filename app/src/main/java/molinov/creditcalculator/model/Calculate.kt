@@ -50,10 +50,7 @@ fun computeAnnuity(data: DataFields, monthRate: BigDecimal, loanTerm: BigDecimal
     )
 }
 
-fun computeDifferentiated(
-    data: DataFields,
-    loanTerm: BigDecimal
-): Calculate {
+fun computeDifferentiated(data: DataFields, loanTerm: BigDecimal): Calculate {
     val percentPaymentList: MutableList<BigDecimal> = mutableListOf()
     val basePayment = data.amount.divide(loanTerm, BIG_SCALE, ROUNDING)
     data.apply {
@@ -89,6 +86,10 @@ fun computeDifferentiated(
         ((basePayment * loanTerm) + percentPaymentSummary(percentPaymentList)).setLowScale()
             .toString()
     )
+}
+
+fun parseDataToSchedule(data: DataFields): List<Schedule> {
+    return listOf(Schedule(1, data.firstDate, "8 000", "7 000", "1 000", "90 000"))
 }
 
 fun percentPaymentSummary(percentPayment: MutableList<BigDecimal>): BigDecimal {

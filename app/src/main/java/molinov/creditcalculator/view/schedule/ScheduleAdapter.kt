@@ -7,14 +7,16 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import molinov.creditcalculator.R
+import molinov.creditcalculator.app.ScheduleFragmentAppState
 import molinov.creditcalculator.model.Schedule
 
 class ScheduleAdapter : RecyclerView.Adapter<ScheduleAdapter.RecyclerItemViewHolder>() {
 
-    private var data: List<Schedule> = arrayListOf(Schedule(1, 10000), Schedule(2, 20000))
+    private var data: List<Schedule> = mutableListOf()
 
-    fun setData(data: List<Schedule>) {
-        this.data = data
+    fun setData(scheduleFragmentAppState: ScheduleFragmentAppState) {
+        if (scheduleFragmentAppState is ScheduleFragmentAppState.Success) this.data =
+            scheduleFragmentAppState.data
         notifyDataSetChanged()
     }
 
@@ -37,7 +39,15 @@ class ScheduleAdapter : RecyclerView.Adapter<ScheduleAdapter.RecyclerItemViewHol
         fun bind(data: Schedule) {
             if (layoutPosition != RecyclerView.NO_POSITION) {
                 itemView.findViewById<TextView>(R.id.scheduleRecyclerViewItem).text =
-                    String.format("%s %s", data.pos, data.amount)
+                    String.format(
+                        "%s %s %s %s %s %s",
+                        data.number,
+                        data.date,
+                        data.payment,
+                        data.mainDebt,
+                        data.percent,
+                        data.balance
+                    )
                 itemView.setOnClickListener {
                     Toast.makeText(
                         itemView.context, "on click", Toast.LENGTH_SHORT

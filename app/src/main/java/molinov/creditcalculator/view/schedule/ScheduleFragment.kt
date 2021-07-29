@@ -6,8 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import molinov.creditcalculator.R
 import molinov.creditcalculator.databinding.ScheduleFragmentBinding
-import molinov.creditcalculator.view.main.MainFragmentArgs
+import molinov.creditcalculator.model.DataFields
 import molinov.creditcalculator.viewmodel.ScheduleViewModel
 
 class ScheduleFragment : Fragment() {
@@ -30,12 +31,10 @@ class ScheduleFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val data = MainFragmentArgs.fromBundle(requireArguments()).data
+        val data: DataFields? = ScheduleFragmentArgs.fromBundle(requireArguments()).data
+        if (data == null) binding.scheduleTextView.text = getString(R.string.schedule_empty)
+        else viewModel.scheduleLiveData.observe(viewLifecycleOwner, { adapter.setData(it) })
         viewModel.scheduleLiveData.observe(viewLifecycleOwner, {
         })
-    }
-
-    companion object {
-        fun newInstance() = ScheduleFragment()
     }
 }

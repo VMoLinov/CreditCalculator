@@ -40,4 +40,5 @@
     <string name="main_fragment">Главная</string>
     <string name="schedule_fragment">График</string>
     <string name="title_notifications">Нотификации</string>
+    <string name="schedule_empty">Здесь пока нет графиков\nСделайте первый расчет!</string>
 </resources>

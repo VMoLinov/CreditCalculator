@@ -19,7 +19,7 @@ import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.textfield.TextInputLayout
 import molinov.creditcalculator.R
-import molinov.creditcalculator.app.AppState
+import molinov.creditcalculator.app.MainFragmentAppState
 import molinov.creditcalculator.databinding.MainFragmentBinding
 import molinov.creditcalculator.model.DataFields
 import molinov.creditcalculator.model.setLowScale
@@ -58,11 +58,11 @@ class MainFragment : Fragment() {
         binding.apply {
             // How I may accept this behavior (clearFocus) to disabled views on a bottom?
             // I try focused, focusedInTouchMode, clicked = true, not work.
-            nestedScrollMain.setOnTouchListener { _, _ ->
-                requireActivity().currentFocus?.clearFocus()
-                hideKeyboard(requireContext(), requireView())
-                return@setOnTouchListener true
-            }
+//            nestedScrollMain.setOnTouchListener { _, _ ->
+//                requireActivity().currentFocus?.clearFocus()
+//                hideKeyboard(requireContext(), requireView())
+//                return@setOnTouchListener true
+//            }
             firstPaymentField.editText?.setOnTouchListener { _, event ->
                 if (MotionEvent.ACTION_UP == event?.action) datePickerLaunch()
                 return@setOnTouchListener false
@@ -96,9 +96,6 @@ class MainFragment : Fragment() {
                     ).show()
                 }
             }
-            creditAmountField.editText?.addTextChangedListener {
-                incorrectInputCheck(it, creditAmountField, incorrectPrefixes, mainErrors)
-            }
             var isEditing = false
             creditAmountField.editText?.addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(s: CharSequence?, st: Int, c: Int, a: Int) {}
@@ -119,6 +116,9 @@ class MainFragment : Fragment() {
                     }
                 }
             })
+            creditAmountField.editText?.addTextChangedListener {
+                incorrectInputCheck(it, creditAmountField, incorrectPrefixes, mainErrors)
+            }
             loanTermField.editText?.addTextChangedListener {
                 incorrectInputCheck(it, loanTermField, incorrectPrefixes, errors)
             }
@@ -146,6 +146,24 @@ class MainFragment : Fragment() {
         }
     }
 
+    private fun renderData(mainFragmentAppState: MainFragmentAppState) {
+        when (mainFragmentAppState) {
+            is MainFragmentAppState.Success -> {
+                binding.apply {
+                    payment.editText?.setText(mainFragmentAppState.data.payment)
+                    overPayment.editText?.setText(mainFragmentAppState.data.overPayment)
+                    totalPayment.editText?.setText(mainFragmentAppState.data.totalPayment)
+                }
+            }
+            is MainFragmentAppState.Loading -> {
+                // TODO
+            }
+            else -> {
+                // TODO
+            }
+        }
+    }
+
     private fun collectDataFields(b: MainFragmentBinding): DataFields {
         val amount = b.creditAmountField.editText?.text.toString().replace(" ", "")
         return DataFields(
@@ -156,6 +174,32 @@ class MainFragment : Fragment() {
             b.month.isChecked,
             b.creditType.text.toString() == creditTypes[0]
         )
+    }
+
+    private fun checkFields(): Boolean {
+        binding.apply {
+            if (firstPaymentField.editText?.text.isNullOrEmpty() || creditAmountField.editText?.text.isNullOrEmpty()
+                || loanTermField.editText?.text.isNullOrEmpty() || rateField.editText?.text.isNullOrEmpty()
+            ) {
+                return false
+            }
+            return true
+        }
+    }
+
+    private fun incorrectInputCheck(
+        it: Editable?, view: TextInputLayout, prefix: Array<String>, errors: Array<String>
+    ) {
+        view.apply {
+            for (i in prefix.indices) {
+                if (it.toString().startsWith(prefix[i])) {
+                    it?.clear()
+                    error = errors[i]
+                    isErrorEnabled = true
+                    break
+                } else isErrorEnabled = false
+            }
+        }
     }
 
     private fun TextInputLayout.setKeyboardAction(action: Int, string: String, pressBtn: Boolean) {
@@ -194,48 +238,6 @@ class MainFragment : Fragment() {
         imm.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
-    private fun incorrectInputCheck(
-        it: Editable?, view: TextInputLayout, prefix: Array<String>, errors: Array<String>
-    ) {
-        view.apply {
-            for (i in prefix.indices) {
-                if (it.toString().startsWith(prefix[i])) {
-                    it?.clear()
-                    error = errors[i]
-                    isErrorEnabled = true
-                    break
-                } else isErrorEnabled = false
-            }
-        }
-    }
-
-    private fun renderData(appState: AppState) {
-        when (appState) {
-            is AppState.Success -> {
-                binding.apply {
-                    payment.editText?.setText(appState.data.payment)
-                    overPayment.editText?.setText(appState.data.overPayment)
-                    totalPayment.editText?.setText(appState.data.totalPayment)
-                }
-            }
-            is AppState.Loading -> {
-                //TODO
-            }
-        }
-    }
-
-    private fun dateParse(date: String): Date {
-        return if (Locale.getDefault() == Locale.US) {
-            SimpleDateFormat(
-                resources.getString(R.string.us_time_pattern),
-                Locale.US
-            ).parse(date) ?: Date()
-        } else SimpleDateFormat(
-            getString(R.string.classic_time_pattern),
-            Locale.getDefault()
-        ).parse(date) ?: Date()
-    }
-
     private fun datePickerLaunch() {
         val picker =
             MaterialDatePicker.Builder.datePicker()
@@ -271,15 +273,16 @@ class MainFragment : Fragment() {
         return calendar.timeInMillis
     }
 
-    private fun checkFields(): Boolean {
-        binding.apply {
-            if (firstPaymentField.editText?.text.isNullOrEmpty() || creditAmountField.editText?.text.isNullOrEmpty()
-                || loanTermField.editText?.text.isNullOrEmpty() || rateField.editText?.text.isNullOrEmpty()
-            ) {
-                return false
-            }
-            return true
-        }
+    private fun dateParse(date: String): Date {
+        return if (Locale.getDefault() == Locale.US) {
+            SimpleDateFormat(
+                resources.getString(R.string.us_time_pattern),
+                Locale.US
+            ).parse(date) ?: Date()
+        } else SimpleDateFormat(
+            getString(R.string.classic_time_pattern),
+            Locale.getDefault()
+        ).parse(date) ?: Date()
     }
 
     override fun onResume() {
