@@ -16,10 +16,25 @@
     <string name="us_time_pattern">MM.dd.yyyy</string>
     <string name="choice_date">Выберите дату</string>
     <string name="percent_sign">%</string>
-    <string name="nole_ahead">Ноль не может быть первым числом</string>
-    <string name="nole_ahead_small">Не ноль</string>
+    <string name="rate_regex">\\d{3}</string>
+    <string name="decimal_format_pattern_amount">###,###</string>
+    <string name="required_field">Обязательное поле</string>
+    <string name="required_field_small">Введите значение</string>
+    <string name="complete_all_fields">Заполните все поля</string>
     <string-array name="credit_types">
-        <item>аннуитет</item>
+        <item>аннуитетный</item>
         <item>дифференцированный</item>
+    </string-array>
+    <string-array name="incorrect_prefixes">
+        <item>0</item>
+        <item>.</item>
+    </string-array>
+    <string-array name="input_errors">
+        <item>Не ноль</item>
+        <item>Введите число</item>
+    </string-array>
+    <string-array name="input_errors_main">
+        <item>Ноль не может быть первым числом</item>
+        <item>Значение не может начинаться с точки</item>
     </string-array>
 </resources>

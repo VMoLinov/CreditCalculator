@@ -20,4 +20,10 @@ class MainActivity : AppCompatActivity() {
                 .commitNow()
         }
     }
+
+    // How clear focus on a EditTextView, when backPressed? It doesn't work :(
+    override fun onBackPressed() {
+        super.onBackPressed()
+        currentFocus?.clearFocus()
+    }
 }

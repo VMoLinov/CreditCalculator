@@ -2,17 +2,14 @@ package molinov.creditcalculator.view.main
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.os.Build
 import android.os.Bundle
 import android.text.Editable
-import android.view.LayoutInflater
-import android.view.MotionEvent
-import android.view.View
-import android.view.ViewGroup
+import android.text.TextWatcher
+import android.view.*
+import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -27,6 +24,8 @@ import molinov.creditcalculator.model.DataFields
 import molinov.creditcalculator.model.setLowScale
 import molinov.creditcalculator.view.schedule.ScheduleFragment
 import molinov.creditcalculator.viewmodel.MainViewModel
+import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -42,56 +41,145 @@ class MainFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = MainFragmentBinding.inflate(inflater, container, false)
+        bindingsSet(binding)
         return binding.root
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        viewModel.mainLiveData.observe(viewLifecycleOwner, { renderData(it) })
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private fun bindingsSet(binding: MainFragmentBinding) {
+        val mainErrors = resources.getStringArray(R.array.input_errors_main)
+        val errors = resources.getStringArray(R.array.input_errors)
+        val incorrectPrefixes = resources.getStringArray(R.array.incorrect_prefixes)
         binding.apply {
+            // How I may accept this behavior (clearFocus) to disabled views on a bottom?
+            // I try focused, focusedInTouchMode, clicked = true, not work.
+            nestedScrollMain.setOnTouchListener { _, _ ->
+                requireActivity().currentFocus?.clearFocus()
+                return@setOnTouchListener true
+            }
             firstPaymentField.editText?.setOnTouchListener { _, event ->
-                if (MotionEvent.ACTION_UP == event?.action) editTextClicked()
+                if (MotionEvent.ACTION_UP == event?.action) datePickerLaunch()
                 return@setOnTouchListener false
             }
-            firstPaymentField.onFocusChangeListener =
-                View.OnFocusChangeListener { _, _ -> }
             scheduleBtn.setOnClickListener {
                 if (checkFields()) {
                     openSchedule()
-                    hideKeyboard(requireContext(), view)
+                    requireActivity().currentFocus?.clearFocus()
+                    hideKeyboard(requireContext(), it)
                 } else {
-                    Toast.makeText(context, "Заполните все поля", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        context,
+                        getString(R.string.complete_all_fields),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
             calculateBtn.setOnClickListener {
                 if (checkFields()) {
+                    requireActivity().currentFocus?.clearFocus()
+                    val amount = creditAmountField.editText?.text.toString().replace(" ", "")
                     val data = DataFields(
                         dateParse(firstPaymentField.editText?.text.toString()),
-                        creditAmountField.editText?.text.toString().toBigDecimal()
-                            .setLowScale(),
+                        amount.toBigDecimal().setLowScale(),
                         loanTermField.editText?.text.toString().toBigDecimal().setLowScale(),
                         rateField.editText?.text.toString().toBigDecimal().setLowScale(),
                         month.isChecked,
                         creditType.text.toString() == creditTypes[0]
                     )
                     viewModel.calculate(data)
-                    hideKeyboard(requireContext(), view)
+                    hideKeyboard(requireContext(), it)
+                } else {
+                    Toast.makeText(
+                        context,
+                        getString(R.string.complete_all_fields),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
             creditAmountField.editText?.addTextChangedListener {
-                creditAmountField.apply {
-                    if (it.toString().startsWith("0")) {
-                        it?.clear()
-                        error = resources.getString(R.string.nole_ahead)
-                        isErrorEnabled = true
-                    } else isErrorEnabled = false
+                incorrectInputCheck(it, creditAmountField, incorrectPrefixes, mainErrors)
+            }
+            var isEditing = false
+            creditAmountField.editText?.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(s: CharSequence?, st: Int, c: Int, a: Int) {}
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+                // How i may synchronized this fun without Boolean?
+                override fun afterTextChanged(s: Editable?) {
+                    if (isEditing) return
+                    if (s.toString().isNotEmpty()) {
+                        isEditing = true
+                        val formattedString = s.toString().replace(" ", "").toDouble()
+                        val dfs = DecimalFormatSymbols.getInstance()
+                        dfs.groupingSeparator = ' '
+                        val df =
+                            DecimalFormat(getString(R.string.decimal_format_pattern_amount), dfs)
+                        s?.replace(0, s.length, df.format(formattedString))
+                        isEditing = false
+                    }
+                }
+            })
+            loanTermField.editText?.addTextChangedListener {
+                incorrectInputCheck(it, loanTermField, incorrectPrefixes, errors)
+            }
+            rateField.editText?.addTextChangedListener {
+                incorrectInputCheck(it, rateField, incorrectPrefixes, errors)
+                if (it.toString().contains(Regex(getString(R.string.rate_regex)))) {
+                    it?.insert(2, ".")
                 }
             }
-            loanTermField.editText?.addTextChangedListener { zeroSmallListener(it, loanTermField) }
-            rateField.editText?.addTextChangedListener { zeroSmallListener(it, rateField) }
+            creditAmountField.setKeyboardAction(
+                EditorInfo.IME_ACTION_NEXT,
+                getString(R.string.required_field),
+                false
+            )
+            loanTermField.setKeyboardAction(
+                EditorInfo.IME_ACTION_NEXT,
+                getString(R.string.required_field_small),
+                false
+            )
+            rateField.setKeyboardAction(
+                EditorInfo.IME_ACTION_DONE,
+                getString(R.string.required_field_small),
+                true
+            )
         }
-        viewModel.mainLiveData.observe(viewLifecycleOwner, { renderData(it) })
+    }
+
+    private fun TextInputLayout.setKeyboardAction(action: Int, string: String, pressBtn: Boolean) {
+        this.editText?.setOnEditorActionListener { _, actionId, _ ->
+            return@setOnEditorActionListener when (actionId) {
+                action -> {
+                    val boolean = this.editText?.text.toString().isEmpty()
+                    when {
+                        boolean -> {
+                            this.error = string
+                            this.isErrorEnabled = true
+                            true
+                        }
+                        pressBtn -> {
+                            this.clearFocus()
+                            binding.calculateBtn.apply {
+                                performClick()
+                                isPressed = true
+                                invalidate()
+                                isPressed = false
+                                invalidate()
+                            }
+                            false
+                        }
+                        else -> false
+                    }
+                }
+                else -> true
+            }
+        }
     }
 
     private fun hideKeyboard(context: Context, view: View) {
@@ -100,13 +188,18 @@ class MainFragment : Fragment() {
         imm.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
-    private fun zeroSmallListener(it: Editable?, view: TextInputLayout) {
+    private fun incorrectInputCheck(
+        it: Editable?, view: TextInputLayout, prefix: Array<String>, errors: Array<String>
+    ) {
         view.apply {
-            if (it.toString().startsWith("0")) {
-                it?.clear()
-                error = resources.getString(R.string.nole_ahead_small)
-                isErrorEnabled = true
-            } else isErrorEnabled = false
+            for (i in prefix.indices) {
+                if (it.toString().startsWith(prefix[i])) {
+                    it?.clear()
+                    error = errors[i]
+                    isErrorEnabled = true
+                    break
+                } else isErrorEnabled = false
+            }
         }
     }
 
@@ -137,9 +230,10 @@ class MainFragment : Fragment() {
         ).parse(date) ?: Date()
     }
 
-    private fun editTextClicked() {
+    private fun datePickerLaunch() {
         val picker =
-            MaterialDatePicker.Builder.datePicker().setTitleText(getString(R.string.choice_date))
+            MaterialDatePicker.Builder.datePicker()
+                .setTitleText(getString(R.string.choice_date))
                 .setCalendarConstraints(setConstraints()).setSelection(setDate()).build()
         picker.addOnPositiveButtonClickListener {
             val calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
@@ -149,14 +243,18 @@ class MainFragment : Fragment() {
                     getString(R.string.us_time_pattern),
                     Locale.getDefault()
                 )
-                else SimpleDateFormat(getString(R.string.classic_time_pattern), Locale.getDefault())
+                else SimpleDateFormat(
+                    getString(R.string.classic_time_pattern),
+                    Locale.getDefault()
+                )
             binding.firstPaymentField.editText?.setText(formatter.format(calendar.time))
         }
         picker.show(this.parentFragmentManager, "DATE_PICKER")
     }
 
     private fun setConstraints(): CalendarConstraints {
-        return CalendarConstraints.Builder().setValidator(DateValidatorPointForward.now()).build()
+        return CalendarConstraints.Builder().setValidator(DateValidatorPointForward.now())
+            .build()
     }
 
     private fun setDate(): Long {
@@ -189,7 +287,6 @@ class MainFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-
         val adapter = ArrayAdapter(requireContext(), R.layout.list_item, creditTypes)
         binding.creditType.setText(creditTypes[0])
         binding.creditType.setAdapter(adapter)

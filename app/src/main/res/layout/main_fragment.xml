@@ -2,8 +2,12 @@
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nested_scroll_main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:clickable="true"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
@@ -72,9 +76,11 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:digits="1234567890 "
                     android:hint="@string/credit_amount"
+                    android:imeOptions="actionNext"
                     android:inputType="number"
-                    android:text="100000" />
+                    android:maxLength="13" />
             </com.google.android.material.textfield.TextInputLayout>
         </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -98,7 +104,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="2.25"
-                android:paddingEnd="@dimen/buttons_margin">
+                android:paddingEnd="@dimen/buttons_margin"
+                app:errorIconDrawable="@null">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
@@ -112,9 +119,9 @@
             <com.google.android.material.button.MaterialButtonToggleGroup
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
                 android:layout_weight="5"
                 android:paddingStart="@dimen/buttons_margin"
+                android:paddingTop="@dimen/buttons_margin"
                 app:checkedButton="@id/month"
                 app:selectionRequired="true"
                 app:singleSelection="true">
@@ -123,7 +130,7 @@
                     android:id="@+id/month"
                     style="?attr/materialButtonOutlinedStyle"
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/months" />
 
@@ -131,7 +138,7 @@
                     android:id="@+id/year"
                     style="?attr/materialButtonOutlinedStyle"
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/years" />
             </com.google.android.material.button.MaterialButtonToggleGroup>
@@ -158,12 +165,14 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="2.25"
                 android:paddingEnd="@dimen/buttons_margin"
+                app:errorIconDrawable="@null"
                 app:suffixText="@string/percent_sign">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:hint="@string/rate"
+                    android:imeOptions="actionDone"
                     android:inputType="numberDecimal"
                     android:maxLength="5"
                     android:text="5.2" />
