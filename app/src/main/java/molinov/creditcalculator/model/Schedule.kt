@@ -6,8 +6,7 @@ import java.util.*
 
 @Parcelize
 data class Schedule(
-    val number: Int,
-    val date: Date,
+    val date: String,
     val payment: String,
     val mainDebt: String,
     val percent: String,

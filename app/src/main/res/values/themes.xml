@@ -26,4 +26,7 @@
     <style name="CreditCalculator.Alpha">
         <item name="android:alpha">?attr/startIconTint</item>
     </style>
+    <style name="CreditCalculator.RecycleTextView">
+        <item name="android:textSize">14sp</item>
+    </style>
 </resources>

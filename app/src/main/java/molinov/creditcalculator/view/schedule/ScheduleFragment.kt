@@ -26,6 +26,12 @@ class ScheduleFragment : Fragment() {
     ): View {
         _binding = ScheduleFragmentBinding.inflate(inflater, container, false)
         binding.scheduleFragmentRecyclerView.adapter = adapter
+//        binding.scheduleFragmentRecyclerView.addItemDecoration(
+//            DividerItemDecoration(
+//                context,
+//                LinearLayoutManager.VERTICAL
+//            )
+//        )
         return binding.root
     }
 
@@ -33,7 +39,10 @@ class ScheduleFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val data: DataFields? = ScheduleFragmentArgs.fromBundle(requireArguments()).data
         if (data == null) binding.scheduleTextView.text = getString(R.string.schedule_empty)
-        else viewModel.scheduleLiveData.observe(viewLifecycleOwner, { adapter.setData(it) })
+        else {
+            viewModel.scheduleLiveData.observe(viewLifecycleOwner, { adapter.setData(it) })
+            viewModel.getSchedule(data)
+        }
         viewModel.scheduleLiveData.observe(viewLifecycleOwner, {
         })
     }

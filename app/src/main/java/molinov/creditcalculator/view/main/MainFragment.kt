@@ -14,19 +14,15 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
-import com.google.android.material.datepicker.CalendarConstraints
-import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.textfield.TextInputLayout
 import molinov.creditcalculator.R
-import molinov.creditcalculator.app.MainFragmentAppState
+import molinov.creditcalculator.app.MainAppState
 import molinov.creditcalculator.databinding.MainFragmentBinding
-import molinov.creditcalculator.model.DataFields
-import molinov.creditcalculator.model.setLowScale
+import molinov.creditcalculator.model.*
 import molinov.creditcalculator.viewmodel.MainViewModel
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
-import java.text.SimpleDateFormat
 import java.util.*
 
 class MainFragment : Fragment() {
@@ -86,7 +82,7 @@ class MainFragment : Fragment() {
                 if (checkFields()) {
                     requireActivity().currentFocus?.clearFocus()
                     val data = collectDataFields(binding)
-                    viewModel.calculate(data)
+                    viewModel.getCalculate(data)
                     hideKeyboard(requireContext(), it)
                 } else {
                     Toast.makeText(
@@ -146,19 +142,16 @@ class MainFragment : Fragment() {
         }
     }
 
-    private fun renderData(mainFragmentAppState: MainFragmentAppState) {
-        when (mainFragmentAppState) {
-            is MainFragmentAppState.Success -> {
+    private fun renderData(mainAppState: MainAppState) {
+        when (mainAppState) {
+            is MainAppState.Success -> {
                 binding.apply {
-                    payment.editText?.setText(mainFragmentAppState.data.payment)
-                    overPayment.editText?.setText(mainFragmentAppState.data.overPayment)
-                    totalPayment.editText?.setText(mainFragmentAppState.data.totalPayment)
+                    payment.editText?.setText(mainAppState.data.payment)
+                    overPayment.editText?.setText(mainAppState.data.overPayment)
+                    totalPayment.editText?.setText(mainAppState.data.totalPayment)
                 }
             }
-            is MainFragmentAppState.Loading -> {
-                // TODO
-            }
-            else -> {
+            is MainAppState.Loading -> {
                 // TODO
             }
         }
@@ -167,7 +160,7 @@ class MainFragment : Fragment() {
     private fun collectDataFields(b: MainFragmentBinding): DataFields {
         val amount = b.creditAmountField.editText?.text.toString().replace(" ", "")
         return DataFields(
-            dateParse(b.firstPaymentField.editText?.text.toString()),
+            parseStringToDate(b.firstPaymentField.editText?.text.toString()),
             amount.toBigDecimal().setLowScale(),
             b.loanTermField.editText?.text.toString().toBigDecimal().setLowScale(),
             b.rateField.editText?.text.toString().toBigDecimal().setLowScale(),
@@ -242,47 +235,14 @@ class MainFragment : Fragment() {
         val picker =
             MaterialDatePicker.Builder.datePicker()
                 .setTitleText(getString(R.string.choice_date))
-                .setCalendarConstraints(setConstraints()).setSelection(setDate()).build()
+                .setCalendarConstraints(setPickerConstraints()).setSelection(setDefaultPickerDate()).build()
         picker.addOnPositiveButtonClickListener {
             val calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
             calendar.timeInMillis = it
-            val formatter =
-                if (Locale.getDefault() == Locale.US) SimpleDateFormat(
-                    getString(R.string.us_time_pattern),
-                    Locale.getDefault()
-                )
-                else SimpleDateFormat(
-                    getString(R.string.classic_time_pattern),
-                    Locale.getDefault()
-                )
+            val formatter = getSimpleDateFormat()
             binding.firstPaymentField.editText?.setText(formatter.format(calendar.time))
         }
         picker.show(this.parentFragmentManager, "DATE_PICKER")
-    }
-
-    private fun setConstraints(): CalendarConstraints {
-        return CalendarConstraints.Builder().setValidator(DateValidatorPointForward.now())
-            .build()
-    }
-
-    private fun setDate(): Long {
-        val today = MaterialDatePicker.todayInUtcMilliseconds()
-        val calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
-        calendar.timeInMillis = today
-        calendar.add(Calendar.MONTH, 1)
-        return calendar.timeInMillis
-    }
-
-    private fun dateParse(date: String): Date {
-        return if (Locale.getDefault() == Locale.US) {
-            SimpleDateFormat(
-                resources.getString(R.string.us_time_pattern),
-                Locale.US
-            ).parse(date) ?: Date()
-        } else SimpleDateFormat(
-            getString(R.string.classic_time_pattern),
-            Locale.getDefault()
-        ).parse(date) ?: Date()
     }
 
     override fun onResume() {
