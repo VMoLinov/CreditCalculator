@@ -43,7 +43,5 @@ class ScheduleFragment : Fragment() {
             viewModel.scheduleLiveData.observe(viewLifecycleOwner, { adapter.setData(it) })
             viewModel.getSchedule(data)
         }
-        viewModel.scheduleLiveData.observe(viewLifecycleOwner, {
-        })
     }
 }

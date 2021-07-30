@@ -20,17 +20,16 @@ fun parseDataFieldsToCalculate(data: DataFields): Calculate {
         if (isMonths) loanTerm
         else loanTerm * MONTHS
     }
-    return if (data.isAnnuity) {
-        calculateAnnuity(data, monthRate, loanTerm)
-    } else {
-        calculateDifferentiated(data, loanTerm)
-    }
+    return if (data.isAnnuity)
+        calculateAnnuity(data.amount, monthRate, loanTerm)
+    else
+        calculateDifferentiate(data.amount, monthRate, loanTerm)
 }
 
-fun calculateAnnuity(data: DataFields, monthRate: BigDecimal, loanTerm: BigDecimal): Calculate {
-    val payment = getAnnualPayment(monthRate, loanTerm, data.amount)
+fun calculateAnnuity(amount: BigDecimal, monthRate: BigDecimal, loanTerm: BigDecimal): Calculate {
+    val payment = getAnnualPayment(monthRate, loanTerm, amount)
     val totalPayment = payment * loanTerm
-    val overPayment = totalPayment - data.amount
+    val overPayment = totalPayment - amount
     return Calculate(
         payment.toString(),
         overPayment.setLowScale().toString(),
@@ -43,42 +42,25 @@ fun getAnnualPayment(monthRate: BigDecimal, loanTerm: BigDecimal, amount: BigDec
     return (amount * (monthRate * ratio)).divide(ratio - ONE, LOW_SCALE, ROUNDING)
 }
 
-fun calculateDifferentiated(data: DataFields, loanTerm: BigDecimal): Calculate {
+fun calculateDifferentiate(
+    amount: BigDecimal, monthRate: BigDecimal, loanTerm: BigDecimal
+): Calculate {
     val percentPaymentList: MutableList<BigDecimal> = mutableListOf()
-    val basePayment = data.amount.divide(loanTerm, BIG_SCALE, ROUNDING)
-    data.apply {
-        val daysBeforeFirstPayment =
-            firstDate.time.minus(System.currentTimeMillis())
-                .toBigDecimal()
-                .divide(MILLIS_IN_A_DAY, 0, ROUNDING)
-        val dayRate = data.rate.setBigScale()
-            .divide(DAYS_IN_YEAR * PERCENTS, BIG_SCALE, ROUNDING)
-        percentPaymentList.add((amount * daysBeforeFirstPayment * dayRate).setLowScale())
-        val daysCount = Calendar.getInstance()
-        daysCount.time = firstDate
-        for (month in 1 until loanTerm.toInt()) {
-            val date = daysCount.timeInMillis
-            daysCount.add(Calendar.MONTH, 1)
-            val delta = daysCount.timeInMillis - date
-            val daysInMonth = delta.toBigDecimal() / MILLIS_IN_A_DAY
-            percentPaymentList.add(
-                ((amount - (basePayment.times(month.toBigDecimal()))
-                        - percentPaymentSummary(percentPaymentList))
-                        * daysInMonth * dayRate).setLowScale()
-            )
-        }
+    val basePayment = amount.divide(loanTerm, BIG_SCALE, ROUNDING)
+    var percent: BigDecimal
+    var balance = amount
+    for (i in 0 until loanTerm.toInt()) {
+        percent = monthRate * balance
+        percentPaymentList.add(percent)
+        balance -= basePayment
     }
-    val maximum = percentPaymentList.maxOrNull() ?: 0
-        .toBigDecimal()
-    val minimum = percentPaymentList.minOrNull() ?: 0
-        .toBigDecimal()
-    return Calculate(
-        (maximum + basePayment).setLowScale().toString()
-                + " ... " + (minimum + basePayment).setLowScale().toString(),
-        percentPaymentSummary(percentPaymentList).toString(),
-        ((basePayment * loanTerm) + percentPaymentSummary(percentPaymentList)).setLowScale()
-            .toString()
-    )
+    val max = percentPaymentList.maxOrNull() ?: BigDecimal(0)
+    val min = percentPaymentList.minOrNull() ?: BigDecimal(0)
+    val payment = (max + basePayment).setLowScale()
+        .toString() + " ... " + (min + basePayment).setLowScale().toString()
+    val overPayment = percentPaymentSummary(percentPaymentList)
+    val totalPayment = (amount + overPayment).setLowScale()
+    return Calculate(payment, overPayment.toString(), totalPayment.toString())
 }
 
 fun parseDataFieldsToSchedule(data: DataFields): List<Schedule> {
@@ -87,9 +69,10 @@ fun parseDataFieldsToSchedule(data: DataFields): List<Schedule> {
         if (isMonths) loanTerm
         else loanTerm * MONTHS
     }
-    return if (data.isAnnuity) {
+    return if (data.isAnnuity)
         scheduleAnnuity(monthRate, loanTerm, data.amount, data.firstDate)
-    } else listOf()
+    else
+        scheduleDifferentiate(monthRate, loanTerm, data.amount, data.firstDate)
 }
 
 fun scheduleAnnuity(
@@ -97,21 +80,13 @@ fun scheduleAnnuity(
 ): List<Schedule> {
     val result: MutableList<Schedule> = mutableListOf()
     var payment = getAnnualPayment(monthRate, loanTerm, amount)
-    var percent = monthRate * amount
-    var mainDebt = payment - percent
-    var balance = amount - mainDebt
-    result.add(
-        Schedule(
-            parseLongDateToString(firstDate.time),
-            payment.setLowScale().toString(),
-            mainDebt.setLowScale().toString(),
-            percent.setLowScale().toString(),
-            balance.setScale(0, ROUNDING).toString()
-        )
-    )
+    var balance = amount
+    var percent: BigDecimal
+    var mainDebt: BigDecimal
     val daysCount = Calendar.getInstance()
     daysCount.time = firstDate
-    for (month in 1 until loanTerm.toInt()) {
+    daysCount.add(Calendar.MONTH, -1)
+    for (month in 0 until loanTerm.toInt()) {
         daysCount.add(Calendar.MONTH, 1)
         percent = monthRate * balance
         if (month == loanTerm.toInt() - 1) payment = balance + percent
@@ -123,10 +98,45 @@ fun scheduleAnnuity(
                 payment.setLowScale().toString(),
                 mainDebt.setLowScale().toString(),
                 percent.setLowScale().toString(),
-                balance.setScale(0, ROUNDING).toString()
+                balance.setLowScale().toString()
             )
         )
     }
+    return result
+}
+
+fun scheduleDifferentiate(
+    monthRate: BigDecimal, loanTerm: BigDecimal, amount: BigDecimal, firstDate: Date
+): List<Schedule> {
+    val result: MutableList<Schedule> = mutableListOf()
+    var percent: BigDecimal
+    var payment: BigDecimal
+    var mainDebt = amount.divide(loanTerm, BIG_SCALE, ROUNDING)
+    var balance = amount
+    var paymentsCount = BigDecimal(0)
+    val daysCount = Calendar.getInstance()
+    daysCount.time = firstDate
+    daysCount.add(Calendar.MONTH, -1)
+    for (month in 0 until loanTerm.toInt()) {
+        daysCount.add(Calendar.MONTH, 1)
+        percent = monthRate * balance
+        if (month == loanTerm.toInt() - 1) mainDebt = balance
+        payment = mainDebt + percent
+        balance -= mainDebt
+        paymentsCount += payment
+        result.add(
+            Schedule(
+                parseLongDateToString(daysCount.timeInMillis),
+                payment.setLowScale().toString(),
+                mainDebt.setLowScale().toString(),
+                percent.setLowScale().toString(),
+                balance.setLowScale().toString()
+            )
+        )
+    }
+    val percentsCount = (paymentsCount - amount).setLowScale().toString()
+    val totalPayments = paymentsCount.setLowScale().toString()
+    result.add(Schedule(result[0].date, totalPayments, "", percentsCount, ""))
     return result
 }
 

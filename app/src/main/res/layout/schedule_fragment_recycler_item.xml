@@ -24,10 +24,10 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_weight="2"
-        android:paddingStart="@dimen/recycler_padding"
-        android:paddingEnd="@dimen/recycler_padding"
-        tools:text="21 февраля 22" />
+        android:layout_marginStart="@dimen/recycler_padding"
+        android:layout_marginEnd="@dimen/recycler_padding"
+        android:layout_weight="1.5"
+        tools:text="21 сентября 22" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/payment"
@@ -41,9 +41,9 @@
         android:id="@+id/balance"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/recycler_padding"
         android:layout_weight="1"
         android:gravity="center_vertical|end"
-        android:paddingStart="@dimen/recycler_padding"
         tools:ignore="RtlSymmetry"
         tools:text="90 000" />
 </androidx.appcompat.widget.LinearLayoutCompat>

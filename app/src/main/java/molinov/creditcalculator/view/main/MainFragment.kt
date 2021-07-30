@@ -235,7 +235,8 @@ class MainFragment : Fragment() {
         val picker =
             MaterialDatePicker.Builder.datePicker()
                 .setTitleText(getString(R.string.choice_date))
-                .setCalendarConstraints(setPickerConstraints()).setSelection(setDefaultPickerDate()).build()
+                .setCalendarConstraints(setPickerConstraints()).setSelection(setDefaultPickerDate())
+                .build()
         picker.addOnPositiveButtonClickListener {
             val calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
             calendar.timeInMillis = it

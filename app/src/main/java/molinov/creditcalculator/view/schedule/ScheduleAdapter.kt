@@ -36,7 +36,7 @@ class ScheduleAdapter : RecyclerView.Adapter<ScheduleAdapter.RecyclerItemViewHol
         return data.size
     }
 
-    class RecyclerItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    inner class RecyclerItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         fun bind(data: Schedule) {
             if (layoutPosition != RecyclerView.NO_POSITION) {
                 itemView.findViewById<AppCompatTextView>(R.id.number).text =
