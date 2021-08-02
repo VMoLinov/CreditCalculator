@@ -27,6 +27,7 @@ import java.util.*
 
 class MainFragment : Fragment() {
 
+    private val bundleKey = "KEY"
     private var _binding: MainFragmentBinding? = null
     private val binding get() = _binding!!
     private val creditTypes: Array<String> by lazy { resources.getStringArray(R.array.credit_types) }
@@ -38,12 +39,29 @@ class MainFragment : Fragment() {
     ): View {
         _binding = MainFragmentBinding.inflate(inflater, container, false)
         bindingsSet(binding)
+        initDropdown(savedInstanceState)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.mainLiveData.observe(viewLifecycleOwner, { renderData(it) })
+    }
+
+    private fun initDropdown(savedInstanceState: Bundle?) {
+        val adapter = ArrayAdapter(requireContext(), R.layout.list_item, creditTypes)
+        var text = creditTypes[0]
+        if (savedInstanceState != null) {
+            text = if (savedInstanceState.getBoolean(bundleKey)) creditTypes[0]
+            else creditTypes[1]
+        }
+        binding.creditType.setText(text)
+        binding.creditType.setAdapter(adapter)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean(bundleKey, binding.creditType.text.toString() == creditTypes[0])
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -247,9 +265,9 @@ class MainFragment : Fragment() {
     }
 
     override fun onResume() {
-        val adapter = ArrayAdapter(requireContext(), R.layout.list_item, creditTypes)
-        binding.creditType.setText(creditTypes[0])
-        binding.creditType.setAdapter(adapter)
+//        val adapter = ArrayAdapter(requireContext(), R.layout.list_item, creditTypes)
+//        binding.creditType.setText(creditTypes[0])
+//        binding.creditType.setAdapter(adapter)
         super.onResume()
     }
 
