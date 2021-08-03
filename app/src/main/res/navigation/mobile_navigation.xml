@@ -12,7 +12,9 @@
         tools:layout="@layout/main_fragment">
         <action
             android:id="@+id/action_main_fragment_to_schedule_fragment"
-            app:destination="@id/schedule_fragment" />
+            app:destination="@id/schedule_fragment"
+            app:launchSingleTop="false"
+            app:popUpToInclusive="false" />
     </fragment>
 
     <fragment

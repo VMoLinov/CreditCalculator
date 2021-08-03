@@ -8,6 +8,7 @@ import molinov.creditcalculator.repository.CalculateRepositoryImpl
 
 class ScheduleViewModel(
     val scheduleLiveData: MutableLiveData<ScheduleAppState> = MutableLiveData(),
+    val navLiveData: MutableLiveData<DataFields> = MutableLiveData(),
     private val calculateRepository: CalculateRepositoryImpl = CalculateRepositoryImpl()
 ) : ViewModel() {
 

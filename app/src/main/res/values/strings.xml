@@ -39,4 +39,13 @@
     <string name="schedule_fragment">График</string>
     <string name="title_notifications">Нотификации</string>
     <string name="schedule_empty">Здесь пока нет графиков\nСделайте первый расчет!</string>
+    <string name="payment_key">PAYMENT</string>
+    <string name="overpayment_key">OVERPAYMENT</string>
+    <string name="total_payment_key">TOTAL_PAYMENT</string>
+    <string name="type_of_credit_key">TYPE_OF_CREDIT</string>
+    <string name="date_key">DATE</string>
+    <string name="amount_key">AMOUNT</string>
+    <string name="loan_term_key">LOAN_TERM</string>
+    <string name="type_term_key">TYPE_TERM</string>
+    <string name="rate_key">RATE</string>
 </resources>

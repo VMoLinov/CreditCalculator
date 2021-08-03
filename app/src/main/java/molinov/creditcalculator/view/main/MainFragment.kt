@@ -10,10 +10,12 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
+import androidx.navigation.navGraphViewModels
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.textfield.TextInputLayout
 import molinov.creditcalculator.R
@@ -21,17 +23,21 @@ import molinov.creditcalculator.app.MainAppState
 import molinov.creditcalculator.databinding.MainFragmentBinding
 import molinov.creditcalculator.model.*
 import molinov.creditcalculator.viewmodel.MainViewModel
+import molinov.creditcalculator.viewmodel.NavViewModel
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
 import java.util.*
 
 class MainFragment : Fragment() {
 
-    private val bundleKey = "KEY"
     private var _binding: MainFragmentBinding? = null
     private val binding get() = _binding!!
     private val creditTypes: Array<String> by lazy { resources.getStringArray(R.array.credit_types) }
     private val viewModel: MainViewModel by lazy { ViewModelProvider(this).get(MainViewModel::class.java) }
+    private val navViewModel: NavViewModel by navGraphViewModels(R.id.mobile_navigation) {
+        defaultViewModelProviderFactory
+    }
+    private var dropDownPos = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,29 +45,13 @@ class MainFragment : Fragment() {
     ): View {
         _binding = MainFragmentBinding.inflate(inflater, container, false)
         bindingsSet(binding)
-        initDropdown(savedInstanceState)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        navViewModel.bundleFromFragment.observe(viewLifecycleOwner, { restoreData(it) })
         viewModel.mainLiveData.observe(viewLifecycleOwner, { renderData(it) })
-    }
-
-    private fun initDropdown(savedInstanceState: Bundle?) {
-        val adapter = ArrayAdapter(requireContext(), R.layout.list_item, creditTypes)
-        var text = creditTypes[0]
-        if (savedInstanceState != null) {
-            text = if (savedInstanceState.getBoolean(bundleKey)) creditTypes[0]
-            else creditTypes[1]
-        }
-        binding.creditType.setText(text)
-        binding.creditType.setAdapter(adapter)
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putBoolean(bundleKey, binding.creditType.text.toString() == creditTypes[0])
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -265,10 +255,42 @@ class MainFragment : Fragment() {
     }
 
     override fun onResume() {
-//        val adapter = ArrayAdapter(requireContext(), R.layout.list_item, creditTypes)
-//        binding.creditType.setText(creditTypes[0])
-//        binding.creditType.setAdapter(adapter)
+        val adapter = ArrayAdapter(requireContext(), R.layout.list_item, creditTypes)
+        binding.creditType.setText(creditTypes[dropDownPos])
+        binding.creditType.setAdapter(adapter)
         super.onResume()
+    }
+
+    private fun restoreData(b: Bundle) {
+        binding.apply {
+            firstPaymentField.editText?.setText(b.getString(getString(R.string.date_key)))
+            creditAmountField.editText?.setText(b.getString(getString(R.string.amount_key)))
+            loanTermField.editText?.setText(b.getString(getString(R.string.loan_term_key)))
+            typeTerm.check(b.getInt(getString(R.string.type_term_key)))
+            rateField.editText?.setText(b.getString(getString(R.string.rate_key)))
+            payment.editText?.setText(b.getString(getString(R.string.payment_key)))
+            overPayment.editText?.setText(b.getString(getString(R.string.overpayment_key)))
+            totalPayment.editText?.setText(b.getString(getString(R.string.total_payment_key)))
+            dropDownPos = b.getInt(getString(R.string.type_of_credit_key))
+            creditType.setText(creditTypes[dropDownPos])
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        binding.apply {
+            navViewModel.bundleFromFragment.value = bundleOf(
+                getString(R.string.date_key) to firstPaymentField.editText?.text.toString(),
+                getString(R.string.amount_key) to creditAmountField.editText?.text.toString(),
+                getString(R.string.loan_term_key) to loanTermField.editText?.text.toString(),
+                getString(R.string.type_term_key) to typeTerm.checkedButtonId,
+                getString(R.string.rate_key) to rateField.editText?.text.toString(),
+                getString(R.string.payment_key) to payment.editText?.text.toString(),
+                getString(R.string.overpayment_key) to binding.overPayment.editText?.text.toString(),
+                getString(R.string.total_payment_key) to binding.totalPayment.editText?.text.toString(),
+                getString(R.string.type_of_credit_key) to creditTypes.indexOf(binding.creditType.text.toString())
+            )
+        }
     }
 
     override fun onDestroy() {

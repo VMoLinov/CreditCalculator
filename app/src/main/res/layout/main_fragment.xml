@@ -120,6 +120,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.button.MaterialButtonToggleGroup
+                android:id="@+id/type_term"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="5"
