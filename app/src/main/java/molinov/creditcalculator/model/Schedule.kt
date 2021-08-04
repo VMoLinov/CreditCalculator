@@ -5,6 +5,7 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class Schedule(
+    val type: Int,
     val date: String,
     val payment: String,
     val mainDebt: String,

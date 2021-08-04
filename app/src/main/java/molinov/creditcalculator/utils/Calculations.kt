@@ -1,5 +1,8 @@
 package molinov.creditcalculator.model
 
+import molinov.creditcalculator.view.schedule.ScheduleAdapter.Companion.TYPE_HEADER
+import molinov.creditcalculator.view.schedule.ScheduleAdapter.Companion.TYPE_MAIN
+import molinov.creditcalculator.view.schedule.ScheduleAdapter.Companion.TYPE_TOTAL
 import java.math.BigDecimal
 import java.math.MathContext
 import java.math.RoundingMode
@@ -83,17 +86,21 @@ fun scheduleAnnuity(
     var balance = amount
     var percent: BigDecimal
     var mainDebt: BigDecimal
+    var paymentsCount = BigDecimal(0)
     val daysCount = Calendar.getInstance()
     daysCount.time = firstDate
     daysCount.add(Calendar.MONTH, -1)
+    result.add(Schedule(TYPE_HEADER, "", "", "", "", ""))
     for (month in 0 until loanTerm.toInt()) {
         daysCount.add(Calendar.MONTH, 1)
         percent = monthRate * balance
         if (month == loanTerm.toInt() - 1) payment = balance + percent
         mainDebt = payment - percent
         balance -= mainDebt
+        paymentsCount += payment
         result.add(
             Schedule(
+                TYPE_MAIN,
                 parseLongDateToString(daysCount.timeInMillis),
                 payment.setLowScale().toString(),
                 mainDebt.setLowScale().toString(),
@@ -102,6 +109,13 @@ fun scheduleAnnuity(
             )
         )
     }
+    val percentsCount = (paymentsCount - amount).setLowScale().toString()
+    val totalPayments = paymentsCount.setLowScale().toString()
+    result.add(
+        Schedule(
+            TYPE_TOTAL, "", totalPayments, amount.setLowScale().toString(), percentsCount, ""
+        )
+    )
     return result
 }
 
@@ -117,6 +131,7 @@ fun scheduleDifferentiate(
     val daysCount = Calendar.getInstance()
     daysCount.time = firstDate
     daysCount.add(Calendar.MONTH, -1)
+    result.add(Schedule(TYPE_HEADER, "", "", "", "", ""))
     for (month in 0 until loanTerm.toInt()) {
         daysCount.add(Calendar.MONTH, 1)
         percent = monthRate * balance
@@ -126,6 +141,7 @@ fun scheduleDifferentiate(
         paymentsCount += payment
         result.add(
             Schedule(
+                TYPE_MAIN,
                 parseLongDateToString(daysCount.timeInMillis),
                 payment.setLowScale().toString(),
                 mainDebt.setLowScale().toString(),
@@ -136,7 +152,16 @@ fun scheduleDifferentiate(
     }
     val percentsCount = (paymentsCount - amount).setLowScale().toString()
     val totalPayments = paymentsCount.setLowScale().toString()
-    result.add(Schedule(result[0].date, totalPayments, "", percentsCount, ""))
+    result.add(
+        Schedule(
+            TYPE_TOTAL,
+            "",
+            totalPayments,
+            amount.setLowScale().toString(),
+            percentsCount,
+            ""
+        )
+    )
     return result
 }
 

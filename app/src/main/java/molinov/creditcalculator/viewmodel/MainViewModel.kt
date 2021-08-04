@@ -1,5 +1,6 @@
 package molinov.creditcalculator.viewmodel
 
+import android.os.Bundle
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import molinov.creditcalculator.app.MainAppState
@@ -8,6 +9,7 @@ import molinov.creditcalculator.repository.CalculateRepositoryImpl
 
 class MainViewModel(
     val mainLiveData: MutableLiveData<MainAppState> = MutableLiveData(),
+    val navLiveData: MutableLiveData<Bundle> = MutableLiveData(),
     private val calculateRepository: CalculateRepositoryImpl = CalculateRepositoryImpl()
 ) : ViewModel() {
 

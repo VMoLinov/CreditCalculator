@@ -15,7 +15,7 @@
     <string name="choice_date">Выберите дату</string>
     <string name="percent_sign">%</string>
     <string name="rate_regex">\\d{3}</string>
-    <string name="decimal_format_pattern_amount">###,###</string>
+    <string name="decimal_format_pattern_amount">###,###.##</string>
     <string name="required_field">Обязательное поле</string>
     <string name="required_field_small">Введите значение</string>
     <string name="complete_all_fields">Заполните все поля</string>
@@ -48,4 +48,10 @@
     <string name="loan_term_key">LOAN_TERM</string>
     <string name="type_term_key">TYPE_TERM</string>
     <string name="rate_key">RATE</string>
+    <string name="payments">Дата платежа</string>
+    <string name="balance">Остаток долга</string>
+    <string name="summary_sign">∑</string>
+    <string name="percents">Процент</string>
+    <string name="main_debt">Тело платежа</string>
+    <string name="summary">Сумма</string>
 </resources>

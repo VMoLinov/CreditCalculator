@@ -3,14 +3,15 @@ package molinov.creditcalculator.view.schedule
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.recyclerview.widget.RecyclerView
 import molinov.creditcalculator.R
 import molinov.creditcalculator.app.ScheduleAppState
 import molinov.creditcalculator.model.Schedule
+import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
 
-class ScheduleAdapter : RecyclerView.Adapter<ScheduleAdapter.RecyclerItemViewHolder>() {
+class ScheduleAdapter : RecyclerView.Adapter<ScheduleAdapter.BaseViewHolder>() {
 
     private var data: List<Schedule> = mutableListOf()
 
@@ -21,35 +22,96 @@ class ScheduleAdapter : RecyclerView.Adapter<ScheduleAdapter.RecyclerItemViewHol
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerItemViewHolder {
-        return RecyclerItemViewHolder(
-            LayoutInflater.from(parent.context)
-                .inflate(R.layout.schedule_fragment_recycler_item, parent, false) as View
-        )
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
+        return when (viewType) {
+            TYPE_HEADER -> {
+                HeaderViewHolder(
+                    LayoutInflater.from(parent.context).inflate(
+                        R.layout.schedule_fragment_recycler_header_item, parent, false
+                    ) as View
+                )
+            }
+            TYPE_MAIN -> {
+                MainViewHolder(
+                    LayoutInflater.from(parent.context).inflate(
+                        R.layout.schedule_fragment_recycler_main_item, parent, false
+                    ) as View
+                )
+            }
+            else -> {
+                TotalViewHolder(
+                    LayoutInflater.from(parent.context).inflate(
+                        R.layout.schedule_fragment_recycler_total_item, parent, false
+                    ) as View
+                )
+            }
+        }
     }
 
-    override fun onBindViewHolder(holder: RecyclerItemViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
         holder.bind(data[position])
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return data[position].type
     }
 
     override fun getItemCount(): Int {
         return data.size
     }
 
-    inner class RecyclerItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        fun bind(data: Schedule) {
+    inner class HeaderViewHolder(view: View) : BaseViewHolder(view) {
+
+    }
+
+    inner class MainViewHolder(view: View) : BaseViewHolder(view) {
+        override fun bind(data: Schedule) {
             if (layoutPosition != RecyclerView.NO_POSITION) {
                 itemView.findViewById<AppCompatTextView>(R.id.number).text =
-                    (layoutPosition + 1).toString()
+                    layoutPosition.toString()
                 itemView.findViewById<AppCompatTextView>(R.id.date).text = data.date
-                itemView.findViewById<AppCompatTextView>(R.id.payment).text = data.payment
-                itemView.findViewById<AppCompatTextView>(R.id.balance).text = data.balance
-                itemView.setOnClickListener {
-                    Toast.makeText(
-                        itemView.context, "on click", Toast.LENGTH_SHORT
-                    ).show()
-                }
+                itemView.findViewById<AppCompatTextView>(R.id.payment).text =
+                    getFormattedNumber(data.payment)
+                itemView.findViewById<AppCompatTextView>(R.id.mainDebt).text =
+                    getFormattedNumber(data.mainDebt)
+                itemView.findViewById<AppCompatTextView>(R.id.percent).text =
+                    getFormattedNumber(data.percent)
+                itemView.findViewById<AppCompatTextView>(R.id.balance).text =
+                    getFormattedNumber(data.balance)
             }
         }
+    }
+
+    inner class TotalViewHolder(view: View) : BaseViewHolder(view) {
+        override fun bind(data: Schedule) {
+            if (layoutPosition != RecyclerView.NO_POSITION) {
+                itemView.findViewById<AppCompatTextView>(R.id.payment).text =
+                    getFormattedNumber(data.payment)
+                itemView.findViewById<AppCompatTextView>(R.id.mainDebt).text =
+                    getFormattedNumber(data.mainDebt)
+                itemView.findViewById<AppCompatTextView>(R.id.percent).text =
+                    getFormattedNumber(data.percent)
+            }
+        }
+    }
+
+    abstract inner class BaseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
+        private val dfs = DecimalFormatSymbols.getInstance()
+
+        open fun bind(data: Schedule) {}
+
+        open fun getFormattedNumber(payment: String): String {
+            dfs.groupingSeparator = ' '
+            val df = DecimalFormat(DECIMAL_FORMAT, dfs)
+            return payment.replaceRange(0, payment.length, df.format(payment.toDouble()))
+        }
+    }
+
+    companion object {
+        const val TYPE_HEADER = 0
+        const val TYPE_MAIN = 1
+        const val TYPE_TOTAL = 2
+        const val DECIMAL_FORMAT = "###,###.##"
     }
 }

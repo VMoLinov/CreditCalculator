@@ -23,7 +23,6 @@ import molinov.creditcalculator.app.MainAppState
 import molinov.creditcalculator.databinding.MainFragmentBinding
 import molinov.creditcalculator.model.*
 import molinov.creditcalculator.viewmodel.MainViewModel
-import molinov.creditcalculator.viewmodel.NavViewModel
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
 import java.util.*
@@ -34,7 +33,7 @@ class MainFragment : Fragment() {
     private val binding get() = _binding!!
     private val creditTypes: Array<String> by lazy { resources.getStringArray(R.array.credit_types) }
     private val viewModel: MainViewModel by lazy { ViewModelProvider(this).get(MainViewModel::class.java) }
-    private val navViewModel: NavViewModel by navGraphViewModels(R.id.mobile_navigation) {
+    private val navViewModel: MainViewModel by navGraphViewModels(R.id.mobile_navigation) {
         defaultViewModelProviderFactory
     }
     private var dropDownPos = 0
@@ -50,7 +49,7 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        navViewModel.bundleFromFragment.observe(viewLifecycleOwner, { restoreData(it) })
+        navViewModel.navLiveData.observe(viewLifecycleOwner, { restoreData(it) })
         viewModel.mainLiveData.observe(viewLifecycleOwner, { renderData(it) })
     }
 
@@ -279,7 +278,7 @@ class MainFragment : Fragment() {
     override fun onPause() {
         super.onPause()
         binding.apply {
-            navViewModel.bundleFromFragment.value = bundleOf(
+            navViewModel.navLiveData.value = bundleOf(
                 getString(R.string.date_key) to firstPaymentField.editText?.text.toString(),
                 getString(R.string.amount_key) to creditAmountField.editText?.text.toString(),
                 getString(R.string.loan_term_key) to loanTermField.editText?.text.toString(),

@@ -1,20 +1,15 @@
 package molinov.creditcalculator
 
 import android.os.Bundle
-import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.onNavDestinationSelected
+import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import molinov.creditcalculator.databinding.MainActivityBinding
-import molinov.creditcalculator.ui.notifications.NotificationsFragment
-import molinov.creditcalculator.view.main.MainFragment
-import molinov.creditcalculator.view.schedule.ScheduleFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -34,7 +29,7 @@ class MainActivity : AppCompatActivity() {
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(navController.graph)
 
-//        setupActionBarWithNavController(navController, appBarConfiguration)
+        setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
     }
