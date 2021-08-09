@@ -104,8 +104,9 @@ class MainFragment : Fragment() {
                 override fun beforeTextChanged(s: CharSequence?, st: Int, c: Int, a: Int) {}
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 
-                // How i may synchronized this fun without Boolean?
+                /** How i may synchronized this fun without Boolean? */
                 override fun afterTextChanged(s: Editable?) {
+                    incorrectInputCheck(s, creditAmountField, incorrectPrefixes, mainErrors)
                     if (isEditing) return
                     if (s.toString().isNotEmpty()) {
                         isEditing = true
@@ -119,9 +120,6 @@ class MainFragment : Fragment() {
                     }
                 }
             })
-            creditAmountField.editText?.addTextChangedListener {
-                incorrectInputCheck(it, creditAmountField, incorrectPrefixes, mainErrors)
-            }
             loanTermField.editText?.addTextChangedListener {
                 incorrectInputCheck(it, loanTermField, incorrectPrefixes, errors)
             }
@@ -153,9 +151,9 @@ class MainFragment : Fragment() {
         when (mainAppState) {
             is MainAppState.Success -> {
                 binding.apply {
-                    payment.editText?.setText(mainAppState.data.payment)
-                    overPayment.editText?.setText(mainAppState.data.overPayment)
-                    totalPayment.editText?.setText(mainAppState.data.totalPayment)
+                    payment.editText?.setText(getFormattedNumber(mainAppState.data.payment))
+                    overPayment.editText?.setText(getFormattedNumber(mainAppState.data.overPayment))
+                    totalPayment.editText?.setText(getFormattedNumber(mainAppState.data.totalPayment))
                 }
             }
             is MainAppState.Loading -> {
@@ -209,12 +207,12 @@ class MainFragment : Fragment() {
                     val boolean = this.editText?.text.toString().isEmpty()
                     when {
                         boolean -> {
-                            this.error = string
-                            this.isErrorEnabled = true
+                            error = string
+                            isErrorEnabled = true
                             true
                         }
                         pressBtn -> {
-                            this.clearFocus()
+                            clearFocus()
                             binding.calculateBtn.apply {
                                 performClick()
                                 isPressed = true

@@ -68,9 +68,25 @@ class ScheduleFragment : Fragment() {
         isExpanded = false
         if (!isScrolling) binding.fabLayout.fab.animate().alpha(0.2f).duration = 1000
         binding.fabLayout.apply {
-            optionOneContainer.fabAction(0f, 0f, false, null)
-            optionTwoContainer.fabAction(0f, 0f, false, null)
-            transparentBackground.fabAction(0f, 0f, false, null)
+            optionOneContainer.apply {
+                animate().translationY(0f).alpha(0f)
+                getChildAt(0).isClickable = false
+                getChildAt(1).isClickable = false
+            }
+            optionTwoContainer.apply {
+                animate().translationY(0f).alpha(0f)
+                getChildAt(0).isClickable = false
+                getChildAt(1).isClickable = false
+            }
+            transparentBackground.apply {
+                animate().translationY(0f).alpha(0f)
+                    .setListener(object : AnimatorListenerAdapter() {
+                        override fun onAnimationEnd(animation: Animator) {
+                            setOnClickListener(null)
+                            isClickable = false
+                        }
+                    })
+            }
         }
     }
 
@@ -78,39 +94,46 @@ class ScheduleFragment : Fragment() {
         isExpanded = true
         binding.fabLayout.apply {
             fab.animate().alpha(1f)
-            optionOneContainer.fabAction(-300f, 1f, true, ROTATE)
-            optionTwoContainer.fabAction(-175f, 1f, true, SAVE_CALCULATE)
-            transparentBackground.fabAction(0f, 0.8f, true, COLLAPSE_FAB)
-        }
-    }
-
-    private fun View.fabAction(move: Float, alpha: Float, isClick: Boolean, int: Int?) : View {
-        this.animate()
-            .translationY(move)
-            .alpha(alpha)
-            .setDuration(300)
-                
-            .setListener(object : AnimatorListenerAdapter() {
-
-                override fun onAnimationEnd(animation: Animator?) {
-                    when (isClick) {
-                        true -> {
-                            this@fabAction.setOnClickListener {
-                                when (int) {
-                                    COLLAPSE_FAB -> collapseFAB()
-                                    SAVE_CALCULATE -> Toast.makeText(
-                                        it.context,
-                                        "message",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                }
+            optionOneContainer.apply {
+                animate().translationY(-300f).alpha(1f)
+                    .setListener(object : AnimatorListenerAdapter() {
+                        override fun onAnimationEnd(animation: Animator) {
+                            getChildAt(0).setOnClickListener {
+                                Toast.makeText(it.context, "work", Toast.LENGTH_SHORT).show()
                             }
+                            getChildAt(1).setOnClickListener {
+                                Toast.makeText(it.context, "work", Toast.LENGTH_SHORT).show()
+                            }
+                            getChildAt(0).isClickable = true
+                            getChildAt(1).isClickable = true
                         }
-                        false -> this@fabAction.setOnClickListener(null)
-                    }
-                    this@fabAction.isClickable = isClick
-                }
-            })
+                    })
+            }
+            optionTwoContainer.apply {
+                animate().translationY(-175f).alpha(1f)
+                    .setListener(object : AnimatorListenerAdapter() {
+                        override fun onAnimationEnd(animation: Animator) {
+                            getChildAt(0).setOnClickListener {
+                                Toast.makeText(it.context, "work", Toast.LENGTH_SHORT).show()
+                            }
+                            getChildAt(1).setOnClickListener {
+                                Toast.makeText(it.context, "work", Toast.LENGTH_SHORT).show()
+                            }
+                            getChildAt(0).isClickable = true
+                            getChildAt(1).isClickable = true
+                        }
+                    })
+            }
+            transparentBackground.apply {
+                animate().translationY(0f).alpha(0.8f)
+                    .setListener(object : AnimatorListenerAdapter() {
+                        override fun onAnimationEnd(animation: Animator) {
+                            setOnClickListener { collapseFAB() }
+                            isClickable = true
+                        }
+                    })
+            }
+        }
     }
 
     private fun setInitialState() {

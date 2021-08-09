@@ -8,8 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import molinov.creditcalculator.R
 import molinov.creditcalculator.app.ScheduleAppState
 import molinov.creditcalculator.model.Schedule
-import java.text.DecimalFormat
-import java.text.DecimalFormatSymbols
+import molinov.creditcalculator.model.getFormattedNumber
 
 class ScheduleAdapter : RecyclerView.Adapter<ScheduleAdapter.BaseViewHolder>() {
 
@@ -96,22 +95,12 @@ class ScheduleAdapter : RecyclerView.Adapter<ScheduleAdapter.BaseViewHolder>() {
     }
 
     abstract inner class BaseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-        private val dfs = DecimalFormatSymbols.getInstance()
-
         open fun bind(data: Schedule) {}
-
-        open fun getFormattedNumber(payment: String): String {
-            dfs.groupingSeparator = ' '
-            val df = DecimalFormat(DECIMAL_FORMAT, dfs)
-            return payment.replaceRange(0, payment.length, df.format(payment.toDouble()))
-        }
     }
 
     companion object {
         const val TYPE_HEADER = 0
         const val TYPE_MAIN = 1
         const val TYPE_TOTAL = 2
-        const val DECIMAL_FORMAT = "###,###.##"
     }
 }

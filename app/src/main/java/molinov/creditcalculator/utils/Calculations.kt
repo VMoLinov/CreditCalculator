@@ -6,10 +6,13 @@ import molinov.creditcalculator.view.schedule.ScheduleAdapter.Companion.TYPE_TOT
 import java.math.BigDecimal
 import java.math.MathContext
 import java.math.RoundingMode
+import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
 import java.util.*
 
 private const val LOW_SCALE = 2
 private const val BIG_SCALE = 10
+const val DECIMAL_FORMAT = "###,###.##"
 private val ROUNDING = RoundingMode.HALF_UP
 private val MONTHS = BigDecimal(12, MathContext(LOW_SCALE, ROUNDING))
 private val PERCENTS = BigDecimal(100, MathContext(LOW_SCALE, ROUNDING))
@@ -27,6 +30,13 @@ fun parseDataFieldsToCalculate(data: DataFields): Calculate {
         calculateAnnuity(data.amount, monthRate, loanTerm)
     else
         calculateDifferentiate(data.amount, monthRate, loanTerm)
+}
+
+fun getFormattedNumber(payment: String): String {
+    val dfs = DecimalFormatSymbols.getInstance()
+    dfs.groupingSeparator = ' '
+    val df = DecimalFormat(DECIMAL_FORMAT, dfs)
+    return payment.replaceRange(0, payment.length, df.format(payment.toDouble()))
 }
 
 fun calculateAnnuity(amount: BigDecimal, monthRate: BigDecimal, loanTerm: BigDecimal): Calculate {
