@@ -1,5 +1,6 @@
 package molinov.creditcalculator.view.schedule
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,8 +13,9 @@ import molinov.creditcalculator.model.getFormattedNumber
 
 class ScheduleAdapter : RecyclerView.Adapter<ScheduleAdapter.BaseViewHolder>() {
 
-    private var data: List<Schedule> = mutableListOf()
+    var data: List<Schedule> = mutableListOf()
 
+    @SuppressLint("NotifyDataSetChanged")
     fun setData(scheduleAppState: ScheduleAppState) {
         if (scheduleAppState is ScheduleAppState.Success) {
             this.data = scheduleAppState.data
@@ -59,9 +61,7 @@ class ScheduleAdapter : RecyclerView.Adapter<ScheduleAdapter.BaseViewHolder>() {
         return data.size
     }
 
-    inner class HeaderViewHolder(view: View) : BaseViewHolder(view) {
-
-    }
+    inner class HeaderViewHolder(view: View) : BaseViewHolder(view) {}
 
     inner class MainViewHolder(view: View) : BaseViewHolder(view) {
         override fun bind(data: Schedule) {

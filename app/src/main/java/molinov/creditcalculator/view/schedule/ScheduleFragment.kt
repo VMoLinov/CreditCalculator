@@ -102,7 +102,8 @@ class ScheduleFragment : Fragment() {
                                 Toast.makeText(it.context, "work", Toast.LENGTH_SHORT).show()
                             }
                             getChildAt(1).setOnClickListener {
-                                Toast.makeText(it.context, "work", Toast.LENGTH_SHORT).show()
+                                viewModel.saveDataToDB(adapter.data)
+                                collapseFAB()
                             }
                             getChildAt(0).isClickable = true
                             getChildAt(1).isClickable = true
@@ -117,7 +118,7 @@ class ScheduleFragment : Fragment() {
                                 Toast.makeText(it.context, "work", Toast.LENGTH_SHORT).show()
                             }
                             getChildAt(1).setOnClickListener {
-                                Toast.makeText(it.context, "work", Toast.LENGTH_SHORT).show()
+                                viewModel.getDataFromDB()
                             }
                             getChildAt(0).isClickable = true
                             getChildAt(1).isClickable = true
