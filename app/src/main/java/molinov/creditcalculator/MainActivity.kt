@@ -3,11 +3,9 @@ package molinov.creditcalculator
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
-import androidx.navigation.ui.setupWithNavController
+import androidx.navigation.ui.*
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import molinov.creditcalculator.databinding.MainActivityBinding
 
@@ -29,6 +27,13 @@ class MainActivity : AppCompatActivity() {
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(navController.graph)
 
+        val builder = NavOptions.Builder().setEnterAnim(R.anim.slide_out_right)
+            .setExitAnim(R.anim.slide_in_left)
+            .setPopEnterAnim(R.anim.slide_out_left)
+            .setPopExitAnim(R.anim.slide_in_right).build()
+        navController.addOnDestinationChangedListener { controller, destination, arguments ->
+
+        }
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 

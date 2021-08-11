@@ -13,7 +13,11 @@
         <action
             android:id="@+id/action_main_fragment_to_schedule_fragment"
             app:destination="@id/schedule_fragment"
+            app:enterAnim="@anim/slide_out_right"
+            app:exitAnim="@anim/slide_in_left"
             app:launchSingleTop="false"
+            app:popEnterAnim="@anim/slide_out_left"
+            app:popExitAnim="@anim/slide_in_right"
             app:popUpToInclusive="false" />
     </fragment>
 
