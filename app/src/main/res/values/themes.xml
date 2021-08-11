@@ -16,6 +16,8 @@
         <!-- on Material.io write - corners changed on a property cornerSize, but is not works. Why? -->
         <!-- <item name="android:alpha">@style/Alpha</item> -->
         <!-- how set alpha to all imageViews? -->
+<!--        <item name="textInputStyle">@style/Shape</item>-->
+<!--        <item name="android:alpha">@style/Alpha</item>-->
     </style>
 
     <style name="Shape" parent="Widget.MaterialComponents.TextInputLayout.FilledBox">

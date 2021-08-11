@@ -12,6 +12,8 @@
     <string name="months">мес</string>
     <string name="years">лет</string>
     <string name="credit_type">Тип кредита</string>
+    <string name="classic_time_pattern">dd.MM.yyyy</string>
+    <string name="us_time_pattern">MM.dd.yyyy</string>
     <string name="choice_date">Выберите дату</string>
     <string name="percent_sign">%</string>
     <string name="rate_regex">\\d{3}</string>
