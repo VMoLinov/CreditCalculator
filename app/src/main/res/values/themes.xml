@@ -12,6 +12,10 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+        <item name="textInputStyle">@style/Shape</item>
+        <!-- on Material.io write - corners changed on a property cornerSize, but is not works. Why? -->
+        <!-- <item name="android:alpha">@style/Alpha</item> -->
+        <!-- how set alpha to all imageViews? -->
 <!--        <item name="textInputStyle">@style/Shape</item>-->
 <!--        <item name="android:alpha">@style/Alpha</item>-->
     </style>
@@ -21,7 +25,10 @@
         <item name="boxCornerRadiusTopStart">4dp</item>
     </style>
 
-    <style name="Alpha" parent="Widget.MaterialComponents.TextInputLayout.FilledBox">
+    <style name="CreditCalculator.Alpha">
         <item name="android:alpha">?attr/startIconTint</item>
+    </style>
+    <style name="CreditCalculator.RecycleTextView">
+        <item name="android:textSize">14sp</item>
     </style>
 </resources>

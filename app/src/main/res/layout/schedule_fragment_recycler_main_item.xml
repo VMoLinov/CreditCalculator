@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scheduleRecyclerViewItem"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingStart="@dimen/recycler_padding"
+    android:paddingTop="@dimen/recycler_padding_top"
+    android:paddingEnd="@dimen/recycler_padding"
+    android:theme="@style/CreditCalculator.RecycleTextView">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/recycle_item_circle"
+        android:gravity="center"
+        android:textStyle="bold"
+        tools:text="1" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/date"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="@dimen/recycler_padding"
+        android:layout_marginEnd="@dimen/recycler_padding"
+        android:layout_weight="1.5"
+        tools:text="21 сентября 22" />
+
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/payment"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center_vertical|end"
+        tools:text="8 000" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/mainDebt"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/percent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/balance"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/recycler_padding"
+        android:layout_weight="1"
+        android:gravity="center_vertical|end"
+        tools:ignore="RtlSymmetry"
+        tools:text="90 000" />
+</androidx.appcompat.widget.LinearLayoutCompat>

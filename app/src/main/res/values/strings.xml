@@ -16,4 +16,44 @@
     <string name="us_time_pattern">MM.dd.yyyy</string>
     <string name="choice_date">Выберите дату</string>
     <string name="percent_sign">%</string>
+    <string name="rate_regex">\\d{3}</string>
+    <string name="decimal_format_pattern_amount">###,###.##</string>
+    <string name="required_field">Обязательное поле</string>
+    <string name="required_field_small">Введите значение</string>
+    <string name="complete_all_fields">Заполните все поля</string>
+    <string-array name="credit_types">
+        <item>аннуитетный</item>
+        <item>дифференцированный</item>
+    </string-array>
+    <string-array name="incorrect_prefixes">
+        <item>0</item>
+        <item>.</item>
+    </string-array>
+    <string-array name="input_errors">
+        <item>Не ноль</item>
+        <item>Введите число</item>
+    </string-array>
+    <string-array name="input_errors_main">
+        <item>Ноль не может быть первым числом</item>
+        <item>Значение не может начинаться с точки</item>
+    </string-array>
+    <string name="main_fragment">Главная</string>
+    <string name="schedule_fragment">График</string>
+    <string name="title_notifications">Нотификации</string>
+    <string name="schedule_empty">Здесь пока нет графиков\nСделайте первый расчет!</string>
+    <string name="payment_key">PAYMENT</string>
+    <string name="overpayment_key">OVERPAYMENT</string>
+    <string name="total_payment_key">TOTAL_PAYMENT</string>
+    <string name="type_of_credit_key">TYPE_OF_CREDIT</string>
+    <string name="date_key">DATE</string>
+    <string name="amount_key">AMOUNT</string>
+    <string name="loan_term_key">LOAN_TERM</string>
+    <string name="type_term_key">TYPE_TERM</string>
+    <string name="rate_key">RATE</string>
+    <string name="payments">Дата платежа</string>
+    <string name="balance">Остаток долга</string>
+    <string name="summary_sign">∑</string>
+    <string name="percents">Процент</string>
+    <string name="main_debt">Тело платежа</string>
+    <string name="summary">Сумма</string>
 </resources>
