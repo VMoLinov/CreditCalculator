@@ -1,9 +1,10 @@
 package molinov.creditcalculator
 
 import android.os.Bundle
-import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.*
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -29,34 +30,50 @@ class MainActivity : AppCompatActivity() {
         appBarConfiguration = AppBarConfiguration(navController.graph)
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
-//        val options = NavOptions.Builder().setLaunchSingleTop()
+//        val options = NavOptions.Builder()
         navView.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.schedule_fragment -> {
-                    if (selectedItem != R.id.schedule_fragment) {
-                        selectedItem = R.id.schedule_fragment
-                        navController.navigate(R.id.action_main_fragment_to_schedule_fragment)
+                    when (selectedItem) {
+                        R.id.main_fragment -> navController.navigate(R.id.action_main_to_schedule)
+                        R.id.credit_list_fragment -> navController.navigate(R.id.action_credit_list_to_schedule)
                     }
+                    selectedItem = R.id.schedule_fragment
                 }
                 R.id.main_fragment -> {
-                    if (selectedItem != R.id.main_fragment) {
-                        selectedItem = R.id.main_fragment
-                        navController.navigate(R.id.action_schedule_fragment_to_main_fragment)
-                        navController.popBackStack(R.id.schedule_fragment, true)
+                    when (selectedItem) {
+                        R.id.schedule_fragment -> navController.navigate(R.id.action_schedule_to_main)
+                        R.id.credit_list_fragment -> navController.navigate(R.id.action_credit_list_to_main)
                     }
+                    selectedItem = R.id.main_fragment
+                }
+                R.id.credit_list_fragment -> {
+                    when (selectedItem) {
+                        R.id.main_fragment -> navController.navigate(R.id.action_main_to_credit_list)
+                        R.id.schedule_fragment -> navController.navigate(R.id.action_schedule_to_credit_list)
+                    }
+                    selectedItem = R.id.credit_list_fragment
                 }
             }
             return@setOnItemSelectedListener true
         }
     }
 
-    override fun onSupportNavigateUp(): Boolean {
-        return navController.navigateUp(appBarConfiguration)
-    }
+//    override fun onSupportNavigateUp(): Boolean {
+//        return navController.navigateUp(appBarConfiguration)
+//    }
 
-    // How clear focus on a EditTextView, when backPressed? It doesn't work :(
     override fun onBackPressed() {
-        super.onBackPressed()
+        when (navController.currentDestination?.id) {
+            R.id.schedule_fragment -> navController.navigate(R.id.action_schedule_to_main)
+            R.id.credit_list_fragment -> navController.navigate(R.id.action_credit_list_to_main)
+            R.id.main_fragment -> {
+                AlertDialog.Builder(this).setMessage("Выйти")
+                    .setPositiveButton("Ok") { _, _ -> finish() }.show()
+            }
+            else -> super.onBackPressed()
+        }
+        /** How clear focus on a EditTextView, when backPressed? It doesn't work :( */
         currentFocus?.clearFocus()
     }
 }

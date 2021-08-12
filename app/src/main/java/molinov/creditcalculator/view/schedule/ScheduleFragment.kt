@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.Navigation
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.navGraphViewModels
 import molinov.creditcalculator.MainActivity
@@ -45,13 +46,6 @@ class ScheduleFragment : Fragment() {
 //                LinearLayoutManager.VERTICAL
 //            )
 //        )
-        requireActivity().onBackPressedDispatcher.addCallback(
-            viewLifecycleOwner,
-            object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    NavHostFragment.findNavController(this@ScheduleFragment).navigateUp()
-                }
-            })
         setFAB()
         binding.scrollView.viewTreeObserver.addOnGlobalLayoutListener {
             val child = binding.scrollView.getChildAt(0).height

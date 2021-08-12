@@ -11,8 +11,15 @@
         android:label="@string/main_fragment"
         tools:layout="@layout/main_fragment">
         <action
-            android:id="@+id/action_main_fragment_to_schedule_fragment"
+            android:id="@+id/action_main_to_schedule"
             app:destination="@id/schedule_fragment"
+            app:enterAnim="@anim/slide_out_right"
+            app:exitAnim="@anim/slide_in_left"
+            app:popEnterAnim="@anim/slide_out_left"
+            app:popExitAnim="@anim/slide_in_right" />
+        <action
+            android:id="@+id/action_main_to_credit_list"
+            app:destination="@id/credit_list_fragment"
             app:enterAnim="@anim/slide_out_right"
             app:exitAnim="@anim/slide_in_left"
             app:popEnterAnim="@anim/slide_out_left"
@@ -26,28 +33,43 @@
         tools:layout="@layout/schedule_fragment">
         <argument
             android:name="data"
+            android:defaultValue="@null"
             app:argType="molinov.creditcalculator.model.DataFields"
-            app:nullable="true"
-            android:defaultValue="@null"/>
+            app:nullable="true" />
         <action
-            android:id="@+id/action_schedule_fragment_to_main_fragment"
+            android:id="@+id/action_schedule_to_main"
             app:destination="@id/main_fragment"
             app:enterAnim="@anim/slide_out_left"
             app:exitAnim="@anim/slide_in_right"
             app:popEnterAnim="@anim/slide_out_right"
             app:popExitAnim="@anim/slide_in_left" />
         <action
-            android:id="@+id/action_schedule_fragment_to_navigation_notifications"
-            app:destination="@id/navigation_notifications" />
+            android:id="@+id/action_schedule_to_credit_list"
+            app:destination="@id/credit_list_fragment"
+            app:enterAnim="@anim/slide_out_right"
+            app:exitAnim="@anim/slide_in_left"
+            app:popEnterAnim="@anim/slide_out_left"
+            app:popExitAnim="@anim/slide_in_right" />
     </fragment>
 
     <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="molinov.creditcalculator.ui.notifications.NotificationsFragment"
-        android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications">
+        android:id="@+id/credit_list_fragment"
+        android:name="molinov.creditcalculator.view.creditslist.CreditListFragment"
+        android:label="@string/credit_list_fragment"
+        tools:layout="@layout/credit_list_fragment">
         <action
-            android:id="@+id/action_navigation_notifications_to_schedule_fragment"
-            app:destination="@id/schedule_fragment" />
+            android:id="@+id/action_credit_list_to_schedule"
+            app:destination="@id/schedule_fragment"
+            app:enterAnim="@anim/slide_out_left"
+            app:exitAnim="@anim/slide_in_right"
+            app:popEnterAnim="@anim/slide_out_right"
+            app:popExitAnim="@anim/slide_in_left" />
+        <action
+            android:id="@+id/action_credit_list_to_main"
+            app:destination="@id/main_fragment"
+            app:enterAnim="@anim/slide_out_left"
+            app:exitAnim="@anim/slide_in_right"
+            app:popEnterAnim="@anim/slide_out_right"
+            app:popExitAnim="@anim/slide_in_left" />
     </fragment>
 </navigation>

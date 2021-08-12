@@ -10,11 +10,13 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.core.os.bundleOf
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.navGraphViewModels
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.textfield.TextInputLayout
@@ -74,7 +76,7 @@ class MainFragment : Fragment() {
             scheduleBtn.setOnClickListener {
                 if (checkFields()) {
                     requireActivity().currentFocus?.clearFocus()
-                    val action = MainFragmentDirections.actionMainFragmentToScheduleFragment(
+                    val action = MainFragmentDirections.actionMainToSchedule(
                         collectDataFields(binding)
                     )
                     Navigation.findNavController(it).navigate(action)
