@@ -15,10 +15,8 @@
             app:destination="@id/schedule_fragment"
             app:enterAnim="@anim/slide_out_right"
             app:exitAnim="@anim/slide_in_left"
-            app:launchSingleTop="false"
             app:popEnterAnim="@anim/slide_out_left"
-            app:popExitAnim="@anim/slide_in_right"
-            app:popUpToInclusive="false" />
+            app:popExitAnim="@anim/slide_in_right" />
     </fragment>
 
     <fragment
@@ -33,7 +31,11 @@
             android:defaultValue="@null"/>
         <action
             android:id="@+id/action_schedule_fragment_to_main_fragment"
-            app:destination="@id/main_fragment" />
+            app:destination="@id/main_fragment"
+            app:enterAnim="@anim/slide_out_left"
+            app:exitAnim="@anim/slide_in_right"
+            app:popEnterAnim="@anim/slide_out_right"
+            app:popExitAnim="@anim/slide_in_left" />
         <action
             android:id="@+id/action_schedule_fragment_to_navigation_notifications"
             app:destination="@id/navigation_notifications" />

@@ -7,9 +7,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.navGraphViewModels
+import molinov.creditcalculator.MainActivity
 import molinov.creditcalculator.R
 import molinov.creditcalculator.databinding.ScheduleFragmentBinding
 import molinov.creditcalculator.model.DataFields
@@ -42,6 +45,13 @@ class ScheduleFragment : Fragment() {
 //                LinearLayoutManager.VERTICAL
 //            )
 //        )
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    NavHostFragment.findNavController(this@ScheduleFragment).navigateUp()
+                }
+            })
         setFAB()
         binding.scrollView.viewTreeObserver.addOnGlobalLayoutListener {
             val child = binding.scrollView.getChildAt(0).height
@@ -175,6 +185,11 @@ class ScheduleFragment : Fragment() {
     override fun onPause() {
         super.onPause()
         navViewModel.navLiveData.value = data
+    }
+
+    override fun onResume() {
+        (activity as MainActivity).selectedItem = R.id.schedule_fragment
+        super.onResume()
     }
 
     companion object {

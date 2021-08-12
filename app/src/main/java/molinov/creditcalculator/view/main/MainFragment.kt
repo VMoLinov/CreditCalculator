@@ -18,6 +18,7 @@ import androidx.navigation.Navigation
 import androidx.navigation.navGraphViewModels
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.textfield.TextInputLayout
+import molinov.creditcalculator.MainActivity
 import molinov.creditcalculator.R
 import molinov.creditcalculator.app.MainAppState
 import molinov.creditcalculator.databinding.MainFragmentBinding
@@ -77,6 +78,7 @@ class MainFragment : Fragment() {
                         collectDataFields(binding)
                     )
                     Navigation.findNavController(it).navigate(action)
+                    (activity as MainActivity).selectedItem = R.id.schedule_fragment
                 } else {
                     Toast.makeText(
                         context,
@@ -255,6 +257,7 @@ class MainFragment : Fragment() {
         val adapter = ArrayAdapter(requireContext(), R.layout.list_item, creditTypes)
         binding.creditType.setText(creditTypes[dropDownPos])
         binding.creditType.setAdapter(adapter)
+        (activity as MainActivity).selectedItem = R.id.main_fragment
         super.onResume()
     }
 
