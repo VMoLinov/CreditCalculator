@@ -68,6 +68,7 @@ class ScheduleFragment : Fragment() {
             binding.scheduleTextView.visibility = View.GONE
             viewModel.scheduleLiveData.observe(viewLifecycleOwner, { adapter.setData(it) })
             viewModel.getSchedule(d)
+            binding.header.payment.text = parseDataFieldsToCalculate(d).payment
         }
     }
 
@@ -177,6 +178,8 @@ class ScheduleFragment : Fragment() {
             if (!binding.scrollView.canScrollVertically(1)) {
                 binding.fabLayout.fab.animate().alpha(0.2f)
             } else binding.fabLayout.fab.animate().alpha(1f)
+            binding.header.scheduleRecyclerViewHeader.isSelected =
+                scrollView.canScrollVertically(-1)
         }
     }
 

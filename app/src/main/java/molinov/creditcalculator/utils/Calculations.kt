@@ -1,6 +1,5 @@
 package molinov.creditcalculator.model
 
-import molinov.creditcalculator.view.schedule.ScheduleAdapter.Companion.TYPE_HEADER
 import molinov.creditcalculator.view.schedule.ScheduleAdapter.Companion.TYPE_MAIN
 import molinov.creditcalculator.view.schedule.ScheduleAdapter.Companion.TYPE_TOTAL
 import java.math.BigDecimal
@@ -99,7 +98,6 @@ fun scheduleAnnuity(
     val daysCount = Calendar.getInstance()
     daysCount.time = firstDate
     daysCount.add(Calendar.MONTH, -1)
-    result.add(Schedule(TYPE_HEADER, "", "", "", "", ""))
     for (month in 0 until loanTerm.toInt()) {
         daysCount.add(Calendar.MONTH, 1)
         percent = monthRate * balance
@@ -140,7 +138,6 @@ fun scheduleDifferentiate(
     val daysCount = Calendar.getInstance()
     daysCount.time = firstDate
     daysCount.add(Calendar.MONTH, -1)
-    result.add(Schedule(TYPE_HEADER, "", "", "", "", ""))
     for (month in 0 until loanTerm.toInt()) {
         daysCount.add(Calendar.MONTH, 1)
         percent = monthRate * balance

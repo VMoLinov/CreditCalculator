@@ -25,13 +25,6 @@ class ScheduleAdapter : RecyclerView.Adapter<ScheduleAdapter.BaseViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
         return when (viewType) {
-            TYPE_HEADER -> {
-                HeaderViewHolder(
-                    LayoutInflater.from(parent.context).inflate(
-                        R.layout.schedule_fragment_recycler_header_item, parent, false
-                    ) as View
-                )
-            }
             TYPE_MAIN -> {
                 MainViewHolder(
                     LayoutInflater.from(parent.context).inflate(
@@ -61,16 +54,12 @@ class ScheduleAdapter : RecyclerView.Adapter<ScheduleAdapter.BaseViewHolder>() {
         return data.size
     }
 
-    inner class HeaderViewHolder(view: View) : BaseViewHolder(view) {}
-
     inner class MainViewHolder(view: View) : BaseViewHolder(view) {
         override fun bind(data: Schedule) {
             if (layoutPosition != RecyclerView.NO_POSITION) {
                 itemView.findViewById<AppCompatTextView>(R.id.number).text =
-                    layoutPosition.toString()
+                    (layoutPosition + 1).toString()
                 itemView.findViewById<AppCompatTextView>(R.id.date).text = data.date
-                itemView.findViewById<AppCompatTextView>(R.id.payment).text =
-                    getFormattedNumber(data.payment)
                 itemView.findViewById<AppCompatTextView>(R.id.mainDebt).text =
                     getFormattedNumber(data.mainDebt)
                 itemView.findViewById<AppCompatTextView>(R.id.percent).text =
@@ -84,8 +73,6 @@ class ScheduleAdapter : RecyclerView.Adapter<ScheduleAdapter.BaseViewHolder>() {
     inner class TotalViewHolder(view: View) : BaseViewHolder(view) {
         override fun bind(data: Schedule) {
             if (layoutPosition != RecyclerView.NO_POSITION) {
-                itemView.findViewById<AppCompatTextView>(R.id.payment).text =
-                    getFormattedNumber(data.payment)
                 itemView.findViewById<AppCompatTextView>(R.id.mainDebt).text =
                     getFormattedNumber(data.mainDebt)
                 itemView.findViewById<AppCompatTextView>(R.id.percent).text =
@@ -99,7 +86,6 @@ class ScheduleAdapter : RecyclerView.Adapter<ScheduleAdapter.BaseViewHolder>() {
     }
 
     companion object {
-        const val TYPE_HEADER = 0
         const val TYPE_MAIN = 1
         const val TYPE_TOTAL = 2
     }
