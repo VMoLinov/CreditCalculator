@@ -6,5 +6,5 @@ import androidx.room.RoomDatabase
 @Database(entities = [DataEntity::class, ScheduleEntity::class], version = 1, exportSchema = false)
 abstract class ScheduleDataBase : RoomDatabase() {
 
-    abstract fun scheduleDao() : ScheduleDao
+    abstract fun scheduleDao(): ScheduleDao
 }

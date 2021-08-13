@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
-import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.*
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -25,12 +24,20 @@ class MainActivity : AppCompatActivity() {
         val navHostFragment =
             supportFragmentManager.findFragmentById(binding.navHostFragmentActivityMain.id) as NavHostFragment
         navController = navHostFragment.navController
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(navController.graph)
-        setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
-//        val options = NavOptions.Builder()
+        initNavigation(navView)
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            supportActionBar?.title = destination.label
+        }
+        // setupActionBarWithNavController(navController, appBarConfiguration)
+    }
+
+//    override fun onSupportNavigateUp(): Boolean {
+//        return navController.navigateUp(appBarConfiguration)
+//    }
+    /** It permanently add to back stack all actions, and not clear it */
+    private fun initNavigation(navView: BottomNavigationView) {
         navView.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.schedule_fragment -> {
@@ -58,10 +65,6 @@ class MainActivity : AppCompatActivity() {
             return@setOnItemSelectedListener true
         }
     }
-
-//    override fun onSupportNavigateUp(): Boolean {
-//        return navController.navigateUp(appBarConfiguration)
-//    }
 
     override fun onBackPressed() {
         when (navController.currentDestination?.id) {

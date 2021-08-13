@@ -7,16 +7,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.activity.OnBackPressedCallback
+import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.Navigation
-import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.navGraphViewModels
 import molinov.creditcalculator.MainActivity
 import molinov.creditcalculator.R
 import molinov.creditcalculator.databinding.ScheduleFragmentBinding
 import molinov.creditcalculator.model.DataFields
+import molinov.creditcalculator.model.parseDataFieldsToCalculate
 import molinov.creditcalculator.viewmodel.ScheduleViewModel
 
 class ScheduleFragment : Fragment() {
@@ -47,17 +46,29 @@ class ScheduleFragment : Fragment() {
 //            )
 //        )
         setFAB()
-        binding.scrollView.viewTreeObserver.addOnGlobalLayoutListener {
-            val child = binding.scrollView.getChildAt(0).height
-            isScrolling = binding.scrollView.height <= child
-            if (!isScrolling) binding.fabLayout.fab.animate().alpha(0.2f).duration = 1000
-        }
-        binding.scrollView.setOnScrollChangeListener { _, _, _, _, _ ->
-            if (binding.scrollView.canScrollVertically(-1)) {
-                binding.fabLayout.fab.animate().alpha(0.2f)
-            } else binding.fabLayout.fab.animate().alpha(1f)
-        }
+        setScrollBehavior(binding.scrollView)
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        data = ScheduleFragmentArgs.fromBundle(requireArguments()).data
+        if (data == null) {
+            binding.scheduleTextView.text = getString(R.string.schedule_empty)
+            binding.scheduleTextView.visibility = View.VISIBLE
+            navViewModel.navLiveData.observe(viewLifecycleOwner, { restoreData(it) })
+        } else {
+            restoreData(data)
+        }
+    }
+
+    private fun restoreData(d: DataFields?) {
+        if (d != null) {
+            data = d
+            binding.scheduleTextView.visibility = View.GONE
+            viewModel.scheduleLiveData.observe(viewLifecycleOwner, { adapter.setData(it) })
+            viewModel.getSchedule(d)
+        }
     }
 
     private fun setFAB() {
@@ -65,6 +76,20 @@ class ScheduleFragment : Fragment() {
         binding.fabLayout.fab.setOnClickListener {
             if (isExpanded) collapseFAB()
             else expandFAB()
+        }
+    }
+
+    private fun setInitialState() {
+        binding.fabLayout.apply {
+            transparentBackground.alpha = 0f
+            optionOneContainer.apply {
+                alpha = 0f
+                isClickable = false
+            }
+            optionTwoContainer.apply {
+                alpha = 0f
+                isClickable = false
+            }
         }
     }
 
@@ -141,38 +166,17 @@ class ScheduleFragment : Fragment() {
         }
     }
 
-    private fun setInitialState() {
-        binding.fabLayout.apply {
-            transparentBackground.alpha = 0f
-            optionOneContainer.apply {
-                alpha = 0f
-                isClickable = false
-            }
-            optionTwoContainer.apply {
-                alpha = 0f
-                isClickable = false
-            }
+    private fun setScrollBehavior(scrollView: NestedScrollView) {
+        scrollView.viewTreeObserver.addOnGlobalLayoutListener {
+            val child = binding.scrollView.getChildAt(0).height.toFloat()
+            val scroll = binding.scrollView.height
+            isScrolling = scroll > child && child / scroll > 0.9
+            if (isScrolling) binding.fabLayout.fab.animate().alpha(0.2f).duration = 1000
         }
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        data = ScheduleFragmentArgs.fromBundle(requireArguments()).data
-        if (data == null) {
-            binding.scheduleTextView.text = getString(R.string.schedule_empty)
-            binding.scheduleTextView.visibility = View.VISIBLE
-            navViewModel.navLiveData.observe(viewLifecycleOwner, { restoreData(it) })
-        } else {
-            restoreData(data)
-        }
-    }
-
-    private fun restoreData(d: DataFields?) {
-        if (d != null) {
-            data = d
-            binding.scheduleTextView.visibility = View.GONE
-            viewModel.scheduleLiveData.observe(viewLifecycleOwner, { adapter.setData(it) })
-            viewModel.getSchedule(d)
+        scrollView.setOnScrollChangeListener { _, _, _, _, _ ->
+            if (!binding.scrollView.canScrollVertically(1)) {
+                binding.fabLayout.fab.animate().alpha(0.2f)
+            } else binding.fabLayout.fab.animate().alpha(1f)
         }
     }
 
@@ -184,11 +188,5 @@ class ScheduleFragment : Fragment() {
     override fun onResume() {
         (activity as MainActivity).selectedItem = R.id.schedule_fragment
         super.onResume()
-    }
-
-    companion object {
-        const val COLLAPSE_FAB = 1
-        const val SAVE_CALCULATE = 2
-        const val ROTATE = 3
     }
 }

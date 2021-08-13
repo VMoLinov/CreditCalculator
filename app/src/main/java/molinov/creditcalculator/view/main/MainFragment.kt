@@ -10,13 +10,11 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
 import android.widget.Toast
-import androidx.activity.OnBackPressedCallback
 import androidx.core.os.bundleOf
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
-import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.navGraphViewModels
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.textfield.TextInputLayout
@@ -155,9 +153,9 @@ class MainFragment : Fragment() {
         when (mainAppState) {
             is MainAppState.Success -> {
                 binding.apply {
-                    payment.editText?.setText(getFormattedNumber(mainAppState.data.payment))
-                    overPayment.editText?.setText(getFormattedNumber(mainAppState.data.overPayment))
-                    totalPayment.editText?.setText(getFormattedNumber(mainAppState.data.totalPayment))
+                    payment.editText?.setText(mainAppState.data.payment)
+                    overPayment.editText?.setText(mainAppState.data.overPayment)
+                    totalPayment.editText?.setText(mainAppState.data.totalPayment)
                 }
             }
             is MainAppState.Loading -> {

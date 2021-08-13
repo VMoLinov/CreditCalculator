@@ -7,7 +7,7 @@ import molinov.creditcalculator.room.ScheduleEntity
 
 class LocalRepositoryImpl(
     private val localData: ScheduleDao
-): LocalRepository {
+) : LocalRepository {
     override fun getAllData(): List<ScheduleData>? {
         return localData.getAll()
     }

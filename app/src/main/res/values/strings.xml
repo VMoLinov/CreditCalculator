@@ -56,4 +56,5 @@
     <string name="percents">Процент</string>
     <string name="main_debt">Тело платежа</string>
     <string name="summary">Сумма</string>
+    <string name="credit_list_fragment_small">Сохраненные</string>
 </resources>
