@@ -24,8 +24,6 @@ class CreditListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = CreditListFragmentBinding.inflate(inflater, container, false)
-        val textView: TextView = binding.textCreditList
-        creditListViewModel.text.observe(viewLifecycleOwner, { textView.text = it })
         return binding.root
     }
 
