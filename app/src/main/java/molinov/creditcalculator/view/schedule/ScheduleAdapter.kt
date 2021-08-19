@@ -1,6 +1,7 @@
 package molinov.creditcalculator.view.schedule
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +12,7 @@ import molinov.creditcalculator.app.ScheduleAppState
 import molinov.creditcalculator.model.Schedule
 import molinov.creditcalculator.model.getFormattedNumber
 
-class ScheduleAdapter : RecyclerView.Adapter<ScheduleAdapter.BaseViewHolder>() {
+class ScheduleAdapter(private var mContext: Context) : RecyclerView.Adapter<ScheduleAdapter.BaseViewHolder>() {
 
     var data: List<Schedule> = mutableListOf()
 
@@ -27,14 +28,14 @@ class ScheduleAdapter : RecyclerView.Adapter<ScheduleAdapter.BaseViewHolder>() {
         return when (viewType) {
             TYPE_MAIN -> {
                 MainViewHolder(
-                    LayoutInflater.from(parent.context).inflate(
+                    LayoutInflater.from(mContext).inflate(
                         R.layout.schedule_fragment_recycler_main_item, parent, false
                     ) as View
                 )
             }
             else -> {
                 TotalViewHolder(
-                    LayoutInflater.from(parent.context).inflate(
+                    LayoutInflater.from(mContext).inflate(
                         R.layout.schedule_fragment_recycler_total_item, parent, false
                     ) as View
                 )

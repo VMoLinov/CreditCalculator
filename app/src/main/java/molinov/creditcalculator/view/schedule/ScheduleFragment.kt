@@ -28,7 +28,7 @@ class ScheduleFragment : Fragment() {
     private val navViewModel: ScheduleViewModel by navGraphViewModels(R.id.mobile_navigation) {
         defaultViewModelProviderFactory
     }
-    private val adapter: ScheduleAdapter by lazy { ScheduleAdapter() }
+    private val adapter: ScheduleAdapter by lazy { ScheduleAdapter(requireContext()) }
     private var data: DataFields? = null
     private var isExpanded = false
     private var isScrolling = false
@@ -147,9 +147,7 @@ class ScheduleFragment : Fragment() {
                             getChildAt(0).setOnClickListener {
                                 Toast.makeText(it.context, "work", Toast.LENGTH_SHORT).show()
                             }
-                            getChildAt(1).setOnClickListener {
-                                viewModel.getDataFromDB()
-                            }
+                            getChildAt(1).setOnClickListener {}
                             getChildAt(0).isClickable = true
                             getChildAt(1).isClickable = true
                         }
