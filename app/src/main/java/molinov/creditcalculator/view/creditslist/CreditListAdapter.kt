@@ -1,6 +1,7 @@
 package molinov.creditcalculator.view.creditslist
 
 import android.annotation.SuppressLint
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,25 +9,24 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.card.MaterialCardView
 import molinov.creditcalculator.R
 import molinov.creditcalculator.app.CreditListAppState
 import molinov.creditcalculator.app.ScheduleAppState
 import molinov.creditcalculator.model.Schedule
+import molinov.creditcalculator.model.paymentFromSchedule
 import molinov.creditcalculator.room.DataEntity
 import molinov.creditcalculator.view.schedule.ScheduleAdapter
 
-class CreditListAdapter(
-    private var onListItemClickListener: OnListItemClickListener
-) : RecyclerView.Adapter<CreditListAdapter.ViewHolder>() {
+class CreditListAdapter : RecyclerView.Adapter<CreditListAdapter.ViewHolder>(),
+    ItemTouchHelperAdapter {
 
-    var data: List<Pair<DataEntity, List<Schedule>>> = mutableListOf()
-    var isScheduleVisible = mutableListOf<Boolean>()
+    var data: MutableList<Pair<DataEntity, List<Schedule>>> = mutableListOf()
 
     @SuppressLint("NotifyDataSetChanged")
     fun setData(appState: CreditListAppState) {
         if (appState is CreditListAppState.Success) {
             this.data = appState.data
-            for (i in data.indices) isScheduleVisible.add(false)
             notifyDataSetChanged()
         }
     }
@@ -40,14 +40,15 @@ class CreditListAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(data[position], isScheduleVisible[position])
+        holder.bind(data[position])
     }
 
     override fun getItemCount(): Int {
         return data.size
     }
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
+        ItemTouchHelperViewHolder {
         private val childRecyclerView: RecyclerView
         private val childAdapter: ScheduleAdapter
 
@@ -58,11 +59,15 @@ class CreditListAdapter(
             childRecyclerView.adapter = childAdapter
         }
 
-        fun bind(data: Pair<DataEntity, List<Schedule>>, isVisible: Boolean) {
+        @SuppressLint("ClickableViewAccessibility")
+        fun bind(data: Pair<DataEntity, List<Schedule>>) {
             if (layoutPosition != RecyclerView.NO_POSITION) {
-                itemView.findViewById<LinearLayoutCompat>(R.id.description).isVisible = isVisible
+                itemView.findViewById<LinearLayoutCompat>(R.id.description).isVisible =
+                    data.first.isExpanded
                 itemView.findViewById<AppCompatTextView>(R.id.name).text = data.first.name
                 itemView.findViewById<AppCompatTextView>(R.id.body).text = data.first.id.toString()
+                itemView.findViewById<AppCompatTextView>(R.id.payment).text =
+                    paymentFromSchedule(data.second)
                 childAdapter.setData(ScheduleAppState.Success(data.second))
                 itemView.findViewById<LinearLayoutCompat>(R.id.main_card_view).setOnClickListener {
                     handleSchedulesVisibility()
@@ -71,14 +76,34 @@ class CreditListAdapter(
         }
 
         private fun handleSchedulesVisibility() {
-            isScheduleVisible[layoutPosition] = !isScheduleVisible[layoutPosition]
+            data[layoutPosition].first.isExpanded = !data[layoutPosition].first.isExpanded
             notifyItemChanged(layoutPosition)
-            for (i in isScheduleVisible.indices) {
-                if (isScheduleVisible[i] && i != layoutPosition) {
-                    isScheduleVisible[i] = false
+            for (i in data.indices) {
+                if (data[i].first.isExpanded && i != layoutPosition) {
+                    data[i].first.isExpanded = false
                     notifyItemChanged(i)
                 }
             }
         }
+
+        override fun onItemSelected() {
+            itemView.setBackgroundColor(Color.LTGRAY)
+        }
+
+        override fun onItemClear() {
+            itemView.setBackgroundColor(Color.WHITE)
+        }
+    }
+
+    override fun onItemMove(fromPosition: Int, toPosition: Int) {
+        data.removeAt(fromPosition).apply {
+            data.add(toPosition, this)
+        }
+        notifyItemMoved(fromPosition, toPosition)
+    }
+
+    override fun onItemDismiss(position: Int) {
+        data.removeAt(position)
+        notifyItemRemoved(position)
     }
 }

@@ -26,5 +26,5 @@ interface ScheduleDao {
 
     @Transaction
     @Query("SELECT * from DataEntity")
-    fun getAll(): List<ScheduleData>?
+    fun getAll(): MutableList<ScheduleData>?
 }

@@ -4,6 +4,8 @@
     android:id="@+id/scheduleRecyclerViewItem"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/recycler_padding"
+    android:layout_marginEnd="@dimen/recycler_padding"
     android:orientation="horizontal"
     android:paddingTop="@dimen/recycler_padding_top"
     android:theme="@style/CreditCalculator.RecycleTextView">

@@ -24,7 +24,7 @@ fun fromScheduleToEntity(schedule: List<Schedule>, index: Long): List<ScheduleEn
     return result
 }
 
-fun fromScheduleDataToPair(scheduleData: List<ScheduleData>?): List<Pair<DataEntity, List<Schedule>>> {
+fun fromScheduleDataToPair(scheduleData: List<ScheduleData>?): MutableList<Pair<DataEntity, List<Schedule>>> {
     return if (scheduleData.isNullOrEmpty()) mutableListOf()
     else {
         val result: MutableList<Pair<DataEntity, List<Schedule>>> = mutableListOf()

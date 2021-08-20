@@ -1,5 +1,11 @@
 package molinov.creditcalculator.view.creditslist
 
-    interface OnListItemClickListener {
-        fun onItemClick()
-    }
+interface ItemTouchHelperAdapter {
+    fun onItemMove(fromPosition: Int, toPosition: Int)
+    fun onItemDismiss(position: Int)
+}
+
+interface ItemTouchHelperViewHolder {
+    fun onItemSelected()
+    fun onItemClear()
+}

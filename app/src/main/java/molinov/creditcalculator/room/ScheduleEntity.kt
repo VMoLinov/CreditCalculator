@@ -9,7 +9,8 @@ import androidx.room.Relation
 data class DataEntity(
 
     @PrimaryKey(autoGenerate = true) val id: Long,
-    val name: String?
+    val name: String?,
+    var isExpanded: Boolean = false
 )
 
 @Entity
