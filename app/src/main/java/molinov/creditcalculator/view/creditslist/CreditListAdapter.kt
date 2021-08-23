@@ -8,8 +8,8 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.isVisible
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.card.MaterialCardView
 import molinov.creditcalculator.R
 import molinov.creditcalculator.app.CreditListAppState
 import molinov.creditcalculator.app.ScheduleAppState
@@ -102,8 +102,14 @@ class CreditListAdapter : RecyclerView.Adapter<CreditListAdapter.ViewHolder>(),
         notifyItemMoved(fromPosition, toPosition)
     }
 
-    override fun onItemDismiss(position: Int) {
-        data.removeAt(position)
-        notifyItemRemoved(position)
+    override fun onItemSwiped(position: Int, direction: Int) {
+        when (direction) {
+            ItemTouchHelper.START -> {
+                data.removeAt(position)
+                notifyItemRemoved(position)
+            }
+            ItemTouchHelper.END -> {
+            }
+        }
     }
 }
