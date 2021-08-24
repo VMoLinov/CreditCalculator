@@ -1,7 +1,6 @@
 package molinov.creditcalculator.view.creditslist
 
 import android.annotation.SuppressLint
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +9,7 @@ import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.card.MaterialCardView
 import molinov.creditcalculator.R
 import molinov.creditcalculator.app.CreditListAppState
 import molinov.creditcalculator.app.ScheduleAppState
@@ -87,11 +87,12 @@ class CreditListAdapter : RecyclerView.Adapter<CreditListAdapter.ViewHolder>(),
         }
 
         override fun onItemSelected() {
-            itemView.setBackgroundColor(Color.LTGRAY)
+            itemView.findViewById<MaterialCardView>(R.id.card).cardElevation = 10f
         }
 
         override fun onItemClear() {
-            itemView.setBackgroundColor(Color.WHITE)
+            itemView.findViewById<MaterialCardView>(R.id.card).cardElevation =
+                itemView.context.resources.getDimension(R.dimen.card_default_elevation)
         }
     }
 

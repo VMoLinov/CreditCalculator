@@ -1,11 +1,9 @@
 package molinov.creditcalculator.view.creditslist
 
-import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.navGraphViewModels
@@ -40,26 +38,7 @@ class CreditListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.creditListFragmentRecycleView.adapter = adapter
-        itemTouchHelper = ItemTouchHelper(
-            ItemTouchHelperCallback(
-                adapter,
-                ResourcesCompat.getDrawable(resources, R.drawable.ic_bank, null)!!,
-                GradientDrawable(
-                    GradientDrawable.Orientation.LEFT_RIGHT,
-                    intArrayOf(
-                        resources.getColor(android.R.color.holo_red_dark, null),
-                        resources.getColor(android.R.color.holo_red_light, null)
-                    )
-                ),
-                GradientDrawable(
-                    GradientDrawable.Orientation.LEFT_RIGHT,
-                    intArrayOf(
-                        resources.getColor(android.R.color.holo_orange_light, null),
-                        resources.getColor(android.R.color.holo_orange_dark, null)
-                    )
-                )
-            )
-        )
+        itemTouchHelper = ItemTouchHelper(ItemTouchHelperCallback(adapter))
         itemTouchHelper.attachToRecyclerView(binding.creditListFragmentRecycleView)
         creditListViewModel.creditListLiveData.observe(viewLifecycleOwner, { adapter.setData(it) })
         creditListViewModel.getSchedule()

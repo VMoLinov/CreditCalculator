@@ -14,5 +14,6 @@
     <dimen name="recycler_padding">20dp</dimen>
     <dimen name="recycler_padding_top">5dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="card_default_elevation">1dp</dimen>
     <!-- is it correct margin? -->
 </resources>

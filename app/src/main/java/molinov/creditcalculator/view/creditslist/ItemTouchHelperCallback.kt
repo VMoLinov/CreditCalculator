@@ -5,19 +5,15 @@ import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.view.View
 import androidx.appcompat.widget.LinearLayoutCompat
-import androidx.core.view.isVisible
+import androidx.core.content.ContextCompat
+import androidx.core.view.*
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
 import molinov.creditcalculator.R
 
 
-class ItemTouchHelperCallback(
-    private val adapter: CreditListAdapter,
-    private val icon: Drawable,
-    private val deleteBackground: GradientDrawable,
-    private val editBackground: GradientDrawable
-) : ItemTouchHelper.Callback() {
+class ItemTouchHelperCallback(private val adapter: CreditListAdapter) : ItemTouchHelper.Callback() {
 
     override fun isLongPressDragEnabled(): Boolean {
         return true
@@ -83,51 +79,100 @@ class ItemTouchHelperCallback(
         actionState: Int,
         isCurrentlyActive: Boolean
     ) {
-        super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+        var background: GradientDrawable? = null
+        val itemView: View = viewHolder.itemView
         if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
-            val itemView: View = viewHolder.itemView
-            val iconMargin: Int = (itemView.height - icon.intrinsicHeight) / 2
-            val iconTop: Int =
-                itemView.top + (itemView.height - icon.intrinsicHeight) / 2
-            val iconBottom: Int = iconTop + icon.intrinsicHeight
+            super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
             val cardView = recyclerView.findViewById<MaterialCardView>(R.id.card)
             val width = itemView.width.toFloat()
             val alpha = 1.0f - kotlin.math.abs(dX) / width
             itemView.alpha = alpha
             itemView.translationX = dX
             when {
-                dX < 0 -> { // Swiping to the left
-                    val iconLeft: Int = itemView.right - iconMargin - icon.intrinsicWidth
-                    val iconRight: Int = itemView.right - iconMargin
-                    icon.setBounds(iconLeft, iconTop, iconRight, iconBottom)
-                    deleteBackground.setBounds(
-                        itemView.left - cardView.paddingLeft,
-                        itemView.top + cardView.paddingTop,
-                        itemView.right - cardView.paddingRight,
-                        itemView.bottom - cardView.paddingBottom
+                dX < 0 -> {
+                    val icon = ContextCompat.getDrawable(itemView.context, R.drawable.ic_delete)!!
+                    background = GradientDrawable(
+                        GradientDrawable.Orientation.LEFT_RIGHT,
+                        intArrayOf(
+                            itemView.resources.getColor(R.color.recycle_red_dark, null),
+                            itemView.resources.getColor(R.color.recycle_red_light, null)
+                        )
                     )
-                    deleteBackground.cornerRadius = 10f
-                    deleteBackground.draw(c)
+                    setIcon(icon, itemView, ItemTouchHelper.LEFT)
+                    background.setBounds(
+                        itemView.left - cardView.marginLeft,
+                        itemView.top + cardView.marginTop,
+                        itemView.right - cardView.marginRight,
+                        itemView.bottom - cardView.marginBottom
+                    )
+                    background.cornerRadius = cardView.radius
+                    background.draw(c)
+                    icon.draw(c)
                 }
                 dX > 0 -> {
-                    val iconLeft: Int = itemView.left + iconMargin
-                    val iconRight: Int = itemView.left + iconMargin + icon.intrinsicWidth
-                    icon.setBounds(iconLeft, iconTop, iconRight, iconBottom)
-                    editBackground.setBounds(
-                        itemView.left + cardView.paddingLeft,
-                        itemView.top + cardView.paddingTop,
-                        itemView.right + cardView.paddingRight,
-                        itemView.bottom - cardView.paddingBottom
+                    val icon = ContextCompat.getDrawable(itemView.context, R.drawable.ic_edit)!!
+                    background = GradientDrawable(
+                        GradientDrawable.Orientation.LEFT_RIGHT,
+                        intArrayOf(
+                            itemView.resources.getColor(R.color.recycle_orange_light, null),
+                            itemView.resources.getColor(R.color.recycle_orange_dark, null)
+                        )
                     )
-                    editBackground.cornerRadius = 10f
-                    editBackground.draw(c)
+                    setIcon(icon, itemView, ItemTouchHelper.RIGHT)
+                    background.setBounds(
+                        itemView.left + cardView.marginLeft,
+                        itemView.top + cardView.marginTop,
+                        itemView.right + cardView.marginRight,
+                        itemView.bottom - cardView.marginBottom
+                    )
+                    background.cornerRadius = cardView.radius
+                    background.draw(c)
+                    icon.draw(c)
                 }
-                else -> { // view is unSwiped
-                    deleteBackground.setBounds(0, 0, 0, 0)
-                    editBackground.setBounds(0, 0, 0, 0)
-                }
+                else -> background?.setBounds(0, 0, 0, 0)
             }
-            icon.draw(c)
+        } else if (actionState == ItemTouchHelper.ACTION_STATE_DRAG) {
+            val clippedDy =
+                clip(recyclerView.height, itemView.top, itemView.bottom, dY) // Set bounds for drag
+            super.onChildDraw(
+                c,
+                recyclerView,
+                viewHolder,
+                dX,
+                clippedDy,
+                actionState,
+                isCurrentlyActive
+            )
+        }
+    }
+
+    private fun setIcon(icon: Drawable, itemView: View, dX: Int) {
+        val iconMargin: Int = (itemView.height - icon.intrinsicHeight) / 2
+        val iconTop: Int = itemView.top + (itemView.height - icon.intrinsicHeight) / 2
+        val iconBottom: Int = iconTop + icon.intrinsicHeight
+        when (dX) {
+            ItemTouchHelper.LEFT -> {
+                val iconLeft: Int = itemView.right - iconMargin - icon.intrinsicWidth
+                val iconRight: Int = itemView.right - iconMargin
+                icon.setBounds(iconLeft, iconTop, iconRight, iconBottom)
+            }
+            ItemTouchHelper.RIGHT -> {
+                val iconLeft: Int = itemView.left + iconMargin
+                val iconRight: Int = itemView.left + iconMargin + icon.intrinsicWidth
+                icon.setBounds(iconLeft, iconTop, iconRight, iconBottom)
+            }
+        }
+    }
+
+    private fun clip(height: Int, top: Int, bottom: Int, delta: Float): Float {
+        val newTop = top + delta
+        val newBottom = bottom + delta
+        val oobTop = 0 - newTop
+        val oobBottom = newBottom - height
+        return when {
+            oobTop > 0 -> delta + oobTop
+            oobBottom > 0 -> delta - oobBottom
+            else -> delta
         }
     }
 }
