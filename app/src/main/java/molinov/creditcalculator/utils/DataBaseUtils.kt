@@ -1,6 +1,7 @@
 package molinov.creditcalculator.utils
 
 import molinov.creditcalculator.model.Schedule
+import molinov.creditcalculator.room.DataEntity
 import molinov.creditcalculator.room.ScheduleData
 import molinov.creditcalculator.room.ScheduleEntity
 
@@ -23,16 +24,16 @@ fun fromScheduleToEntity(schedule: List<Schedule>, index: Long): List<ScheduleEn
     return result
 }
 
-fun fromScheduleDataToPair(scheduleData: List<ScheduleData>?): List<Pair<Long, List<Schedule>>>? {
-    return if (scheduleData.isNullOrEmpty()) null
+fun fromScheduleDataToPair(scheduleData: List<ScheduleData>?): MutableList<Pair<DataEntity, List<Schedule>>> {
+    return if (scheduleData.isNullOrEmpty()) mutableListOf()
     else {
-        val result: MutableList<Pair<Long, List<Schedule>>> = mutableListOf()
+        val result: MutableList<Pair<DataEntity, List<Schedule>>> = mutableListOf()
         val schedule: MutableList<Schedule> = mutableListOf()
         scheduleData.iterator().forEach {
             it.schedule.iterator().forEach { e ->
                 schedule.add(Schedule(e.type, e.date, e.payment, e.mainDebt, e.percent, e.balance))
             }
-            result.add(Pair(it.dataList.id, schedule.toList()))
+            result.add(Pair(it.dataList, schedule.toList()))
             schedule.clear()
         }
         result

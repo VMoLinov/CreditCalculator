@@ -6,7 +6,7 @@ import molinov.creditcalculator.room.ScheduleEntity
 
 interface LocalRepository {
 
-    fun getAllData(): List<ScheduleData>?
+    fun getAllData(): MutableList<ScheduleData>?
 
     fun saveData(data: DataEntity): Long
 

@@ -1,6 +1,5 @@
 package molinov.creditcalculator.model
 
-import molinov.creditcalculator.view.schedule.ScheduleAdapter.Companion.TYPE_HEADER
 import molinov.creditcalculator.view.schedule.ScheduleAdapter.Companion.TYPE_MAIN
 import molinov.creditcalculator.view.schedule.ScheduleAdapter.Companion.TYPE_TOTAL
 import java.math.BigDecimal
@@ -12,12 +11,10 @@ import java.util.*
 
 private const val LOW_SCALE = 2
 private const val BIG_SCALE = 10
-const val DECIMAL_FORMAT = "###,###.##"
+private const val DECIMAL_FORMAT = "###,###.##"
 private val ROUNDING = RoundingMode.HALF_UP
 private val MONTHS = BigDecimal(12, MathContext(LOW_SCALE, ROUNDING))
 private val PERCENTS = BigDecimal(100, MathContext(LOW_SCALE, ROUNDING))
-private val DAYS_IN_YEAR = BigDecimal(365, MathContext(LOW_SCALE, ROUNDING))
-private val MILLIS_IN_A_DAY = BigDecimal(86400000, MathContext(LOW_SCALE, ROUNDING))
 private val ONE = BigDecimal(1, MathContext(LOW_SCALE, ROUNDING))
 
 fun parseDataFieldsToCalculate(data: DataFields): Calculate {
@@ -44,9 +41,9 @@ fun calculateAnnuity(amount: BigDecimal, monthRate: BigDecimal, loanTerm: BigDec
     val totalPayment = payment * loanTerm
     val overPayment = totalPayment - amount
     return Calculate(
-        payment.toString(),
-        overPayment.setLowScale().toString(),
-        totalPayment.setLowScale().toString()
+        getFormattedNumber(payment.toString()),
+        getFormattedNumber(overPayment.setLowScale().toString()),
+        getFormattedNumber(totalPayment.setLowScale().toString())
     )
 }
 
@@ -69,11 +66,12 @@ fun calculateDifferentiate(
     }
     val max = percentPaymentList.maxOrNull() ?: BigDecimal(0)
     val min = percentPaymentList.minOrNull() ?: BigDecimal(0)
-    val payment = (max + basePayment).setLowScale()
-        .toString() + " ... " + (min + basePayment).setLowScale().toString()
+    val payment = getFormattedNumber(
+        (max + basePayment).setLowScale().toString()
+    ) + " ... " + getFormattedNumber((min + basePayment).setLowScale().toString())
     val overPayment = percentPaymentSummary(percentPaymentList)
-    val totalPayment = (amount + overPayment).setLowScale()
-    return Calculate(payment, overPayment.toString(), totalPayment.toString())
+    val totalPayment = getFormattedNumber((amount + overPayment).setLowScale().toString())
+    return Calculate(payment, getFormattedNumber(overPayment.toString()), totalPayment)
 }
 
 fun parseDataFieldsToSchedule(data: DataFields): List<Schedule> {
@@ -100,7 +98,6 @@ fun scheduleAnnuity(
     val daysCount = Calendar.getInstance()
     daysCount.time = firstDate
     daysCount.add(Calendar.MONTH, -1)
-    result.add(Schedule(TYPE_HEADER, "", "", "", "", ""))
     for (month in 0 until loanTerm.toInt()) {
         daysCount.add(Calendar.MONTH, 1)
         percent = monthRate * balance
@@ -141,7 +138,6 @@ fun scheduleDifferentiate(
     val daysCount = Calendar.getInstance()
     daysCount.time = firstDate
     daysCount.add(Calendar.MONTH, -1)
-    result.add(Schedule(TYPE_HEADER, "", "", "", "", ""))
     for (month in 0 until loanTerm.toInt()) {
         daysCount.add(Calendar.MONTH, 1)
         percent = monthRate * balance
@@ -179,6 +175,11 @@ fun percentPaymentSummary(percentPayment: MutableList<BigDecimal>): BigDecimal {
     var count = BigDecimal(0, MathContext(LOW_SCALE, ROUNDING))
     for (item in percentPayment) count += item.setLowScale()
     return count
+}
+
+fun paymentFromSchedule(data: List<Schedule>): String {
+    return if (data[0].payment != data[1].payment) data[0].payment + " ... " + data[data.size - 2].payment
+    else data[0].payment
 }
 
 fun BigDecimal.setLowScale(): BigDecimal = setScale(LOW_SCALE, ROUNDING)

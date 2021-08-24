@@ -1,12 +1,16 @@
 package molinov.creditcalculator.room
 
-import androidx.room.*
+import androidx.room.Embedded
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import androidx.room.Relation
 
 @Entity
 data class DataEntity(
 
     @PrimaryKey(autoGenerate = true) val id: Long,
-    val name: String?
+    val name: String?,
+    var isExpanded: Boolean = false
 )
 
 @Entity

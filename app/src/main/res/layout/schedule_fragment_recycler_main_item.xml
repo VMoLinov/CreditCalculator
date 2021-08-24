@@ -4,10 +4,10 @@
     android:id="@+id/scheduleRecyclerViewItem"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/recycler_padding"
+    android:layout_marginEnd="@dimen/recycler_padding"
     android:orientation="horizontal"
-    android:paddingStart="@dimen/recycler_padding"
     android:paddingTop="@dimen/recycler_padding_top"
-    android:paddingEnd="@dimen/recycler_padding"
     android:theme="@style/CreditCalculator.RecycleTextView">
 
     <androidx.appcompat.widget.AppCompatTextView
@@ -28,15 +28,6 @@
         android:layout_marginEnd="@dimen/recycler_padding"
         android:layout_weight="1.5"
         tools:text="21 сентября 22" />
-
-
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/payment"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:gravity="center_vertical|end"
-        tools:text="8 000" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/mainDebt"

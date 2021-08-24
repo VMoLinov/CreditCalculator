@@ -25,7 +25,7 @@ class ScheduleViewModel(
         scheduleRepository.saveSchedule(fromScheduleToEntity(data, index))
     }
 
-    fun getDataFromDB(): List<Pair<Long, List<Schedule>>>? {
+    fun getDataFromDB(): List<Pair<DataEntity, List<Schedule>>>? {
         return fromScheduleDataToPair(scheduleRepository.getAllData())
     }
 

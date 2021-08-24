@@ -1,7 +1,10 @@
 package molinov.creditcalculator.room
 
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Insert
 import androidx.room.OnConflictStrategy.REPLACE
+import androidx.room.Query
+import androidx.room.Transaction
 
 @Dao
 interface ScheduleDao {
@@ -23,5 +26,5 @@ interface ScheduleDao {
 
     @Transaction
     @Query("SELECT * from DataEntity")
-    fun getAll(): List<ScheduleData>?
+    fun getAll(): MutableList<ScheduleData>?
 }

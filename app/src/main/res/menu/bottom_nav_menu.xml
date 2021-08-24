@@ -12,8 +12,7 @@
         android:title="@string/schedule_fragment" />
 
     <item
-        android:id="@+id/navigation_notifications"
+        android:id="@+id/credit_list_fragment"
         android:icon="@drawable/ic_notifications_black_24dp"
-        android:title="@string/title_notifications" />
-
+        android:title="@string/credit_list_fragment_small" />
 </menu>

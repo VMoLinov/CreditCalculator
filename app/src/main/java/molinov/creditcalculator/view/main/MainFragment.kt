@@ -18,6 +18,7 @@ import androidx.navigation.Navigation
 import androidx.navigation.navGraphViewModels
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.textfield.TextInputLayout
+import molinov.creditcalculator.MainActivity
 import molinov.creditcalculator.R
 import molinov.creditcalculator.app.MainAppState
 import molinov.creditcalculator.databinding.MainFragmentBinding
@@ -73,10 +74,11 @@ class MainFragment : Fragment() {
             scheduleBtn.setOnClickListener {
                 if (checkFields()) {
                     requireActivity().currentFocus?.clearFocus()
-                    val action = MainFragmentDirections.actionMainFragmentToScheduleFragment(
+                    val action = MainFragmentDirections.actionMainToSchedule(
                         collectDataFields(binding)
                     )
                     Navigation.findNavController(it).navigate(action)
+                    (activity as MainActivity).selectedItem = R.id.schedule_fragment
                 } else {
                     Toast.makeText(
                         context,
@@ -151,9 +153,9 @@ class MainFragment : Fragment() {
         when (mainAppState) {
             is MainAppState.Success -> {
                 binding.apply {
-                    payment.editText?.setText(getFormattedNumber(mainAppState.data.payment))
-                    overPayment.editText?.setText(getFormattedNumber(mainAppState.data.overPayment))
-                    totalPayment.editText?.setText(getFormattedNumber(mainAppState.data.totalPayment))
+                    payment.editText?.setText(mainAppState.data.payment)
+                    overPayment.editText?.setText(mainAppState.data.overPayment)
+                    totalPayment.editText?.setText(mainAppState.data.totalPayment)
                 }
             }
             is MainAppState.Loading -> {
@@ -255,6 +257,7 @@ class MainFragment : Fragment() {
         val adapter = ArrayAdapter(requireContext(), R.layout.list_item, creditTypes)
         binding.creditType.setText(creditTypes[dropDownPos])
         binding.creditType.setAdapter(adapter)
+        (activity as MainActivity).selectedItem = R.id.main_fragment
         super.onResume()
     }
 

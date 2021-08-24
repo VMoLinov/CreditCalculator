@@ -39,7 +39,7 @@
     </string-array>
     <string name="main_fragment">Главная</string>
     <string name="schedule_fragment">График</string>
-    <string name="title_notifications">Нотификации</string>
+    <string name="credit_list_fragment">Сохраненные расчеты</string>
     <string name="schedule_empty">Здесь пока нет графиков\nСделайте первый расчет!</string>
     <string name="payment_key">PAYMENT</string>
     <string name="overpayment_key">OVERPAYMENT</string>
@@ -56,4 +56,5 @@
     <string name="percents">Процент</string>
     <string name="main_debt">Тело платежа</string>
     <string name="summary">Сумма</string>
+    <string name="credit_list_fragment_small">Сохраненные</string>
 </resources>
