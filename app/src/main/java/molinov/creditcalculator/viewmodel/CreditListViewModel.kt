@@ -23,4 +23,8 @@ class CreditListViewModel(
             )
         }.start()
     }
+
+    fun delete(id: Long) {
+        creditListRepository.delete(id)
+    }
 }

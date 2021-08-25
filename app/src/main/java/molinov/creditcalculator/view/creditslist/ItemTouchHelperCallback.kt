@@ -99,14 +99,16 @@ class ItemTouchHelperCallback(private val adapter: CreditListAdapter) : ItemTouc
                         )
                     )
                     setIcon(icon, itemView, ItemTouchHelper.LEFT)
-                    background.setBounds(
-                        itemView.left - cardView.marginLeft,
-                        itemView.top + cardView.marginTop,
-                        itemView.right - cardView.marginRight,
-                        itemView.bottom - cardView.marginBottom
-                    )
-                    background.cornerRadius = cardView.radius
-                    background.draw(c)
+                    background.apply {
+                        setBounds(
+                            itemView.left - cardView.marginLeft,
+                            itemView.top + cardView.marginTop,
+                            itemView.right - cardView.marginRight,
+                            itemView.bottom - cardView.marginBottom
+                        )
+                        cornerRadius = cardView.radius
+                        draw(c)
+                    }
                     icon.draw(c)
                 }
                 dX > 0 -> {
@@ -119,14 +121,16 @@ class ItemTouchHelperCallback(private val adapter: CreditListAdapter) : ItemTouc
                         )
                     )
                     setIcon(icon, itemView, ItemTouchHelper.RIGHT)
-                    background.setBounds(
-                        itemView.left + cardView.marginLeft,
-                        itemView.top + cardView.marginTop,
-                        itemView.right + cardView.marginRight,
-                        itemView.bottom - cardView.marginBottom
-                    )
-                    background.cornerRadius = cardView.radius
-                    background.draw(c)
+                    background.apply {
+                        setBounds(
+                            itemView.left + cardView.marginLeft,
+                            itemView.top + cardView.marginTop,
+                            itemView.right + cardView.marginRight,
+                            itemView.bottom - cardView.marginBottom
+                        )
+                        cornerRadius = cardView.radius
+                        draw(c)
+                    }
                     icon.draw(c)
                 }
                 else -> background?.setBounds(0, 0, 0, 0)
@@ -146,11 +150,11 @@ class ItemTouchHelperCallback(private val adapter: CreditListAdapter) : ItemTouc
         }
     }
 
-    private fun setIcon(icon: Drawable, itemView: View, dX: Int) {
+    private fun setIcon(icon: Drawable, itemView: View, direction: Int) {
         val iconMargin: Int = (itemView.height - icon.intrinsicHeight) / 2
         val iconTop: Int = itemView.top + (itemView.height - icon.intrinsicHeight) / 2
         val iconBottom: Int = iconTop + icon.intrinsicHeight
-        when (dX) {
+        when (direction) {
             ItemTouchHelper.LEFT -> {
                 val iconLeft: Int = itemView.right - iconMargin - icon.intrinsicWidth
                 val iconRight: Int = itemView.right - iconMargin

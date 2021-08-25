@@ -1,14 +1,14 @@
 package molinov.creditcalculator.repository
 
+import molinov.creditcalculator.model.Schedule
 import molinov.creditcalculator.room.DataEntity
 import molinov.creditcalculator.room.ScheduleData
-import molinov.creditcalculator.room.ScheduleEntity
 
 interface LocalRepository {
 
     fun getAllData(): MutableList<ScheduleData>?
 
-    fun saveData(data: DataEntity): Long
+    fun insert(data: DataEntity, list: List<Schedule>)
 
-    fun saveSchedule(schedule: List<ScheduleEntity>)
+    fun delete(id: Long)
 }

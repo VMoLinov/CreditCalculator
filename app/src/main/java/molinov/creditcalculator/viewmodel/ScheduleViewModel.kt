@@ -11,7 +11,6 @@ import molinov.creditcalculator.repository.LocalRepository
 import molinov.creditcalculator.repository.LocalRepositoryImpl
 import molinov.creditcalculator.room.DataEntity
 import molinov.creditcalculator.utils.fromScheduleDataToPair
-import molinov.creditcalculator.utils.fromScheduleToEntity
 
 class ScheduleViewModel(
     val scheduleLiveData: MutableLiveData<ScheduleAppState> = MutableLiveData(),
@@ -21,8 +20,7 @@ class ScheduleViewModel(
 ) : ViewModel() {
 
     fun saveDataToDB(data: List<Schedule>) {
-        val index = scheduleRepository.saveData(DataEntity(0, "name"))
-        scheduleRepository.saveSchedule(fromScheduleToEntity(data, index))
+        scheduleRepository.insert(DataEntity(0, "name"), data)
     }
 
     fun getDataFromDB(): List<Pair<DataEntity, List<Schedule>>>? {

@@ -1,9 +1,11 @@
 package molinov.creditcalculator.view.creditslist
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.isVisible
@@ -17,11 +19,15 @@ import molinov.creditcalculator.model.Schedule
 import molinov.creditcalculator.model.paymentFromSchedule
 import molinov.creditcalculator.room.DataEntity
 import molinov.creditcalculator.view.schedule.ScheduleAdapter
+import molinov.creditcalculator.viewmodel.CreditListViewModel
 
-class CreditListAdapter : RecyclerView.Adapter<CreditListAdapter.ViewHolder>(),
+class CreditListAdapter(
+    private val viewModel: CreditListViewModel
+) : RecyclerView.Adapter<CreditListAdapter.ViewHolder>(),
     ItemTouchHelperAdapter {
 
     var data: MutableList<Pair<DataEntity, List<Schedule>>> = mutableListOf()
+    lateinit var mContext: Context
 
     @SuppressLint("NotifyDataSetChanged")
     fun setData(appState: CreditListAppState) {
@@ -32,6 +38,7 @@ class CreditListAdapter : RecyclerView.Adapter<CreditListAdapter.ViewHolder>(),
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        mContext = parent.context
         return ViewHolder(
             LayoutInflater.from(parent.context).inflate(
                 R.layout.credit_list_fragment_recycle_item, parent, false
@@ -106,10 +113,14 @@ class CreditListAdapter : RecyclerView.Adapter<CreditListAdapter.ViewHolder>(),
     override fun onItemSwiped(position: Int, direction: Int) {
         when (direction) {
             ItemTouchHelper.START -> {
+                viewModel.delete(data[position].first.id)
                 data.removeAt(position)
                 notifyItemRemoved(position)
             }
             ItemTouchHelper.END -> {
+                data.removeAt(position)
+                notifyItemRemoved(position)
+                Toast.makeText(mContext, "TODO", Toast.LENGTH_SHORT).show()
             }
         }
     }
