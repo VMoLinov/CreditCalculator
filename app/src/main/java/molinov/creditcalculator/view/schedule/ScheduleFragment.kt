@@ -2,14 +2,20 @@ package molinov.creditcalculator.view.schedule
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
+import android.app.AlertDialog
+import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.Toast
+import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.widget.NestedScrollView
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.Navigation
 import androidx.navigation.navGraphViewModels
 import molinov.creditcalculator.MainActivity
 import molinov.creditcalculator.R
@@ -132,7 +138,7 @@ class ScheduleFragment : Fragment() {
                                 Toast.makeText(it.context, "work", Toast.LENGTH_SHORT).show()
                             }
                             getChildAt(1).setOnClickListener {
-                                viewModel.saveDataToDB(adapter.data)
+                                createDialogToSave()
                                 collapseFAB()
                             }
                             getChildAt(0).isClickable = true
@@ -163,6 +169,28 @@ class ScheduleFragment : Fragment() {
                     })
             }
         }
+    }
+
+    private fun createDialogToSave() {
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setView(R.layout.dialog_save_calculation)
+            .setPositiveButton(R.string.save) { d, _ ->
+                val dialog = d as Dialog
+                val nameField = dialog.findViewById<AppCompatEditText>(R.id.dialog_name)
+                val name = nameField.text.toString()
+                viewModel.saveDataToDB(adapter.data, name)
+                d.dismiss()
+                Navigation.findNavController(requireView())
+                    .navigate(ScheduleFragmentDirections.actionScheduleToCreditList())
+                (activity as MainActivity).selectedItem = R.id.credit_list_fragment
+            }
+            .setNegativeButton(R.string.cancel) { d, _ -> d.cancel() }
+        val dialog = builder.create()
+        dialog.show()
+        val button = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+        button.isEnabled = false
+        val nameField = dialog.findViewById<EditText>(R.id.dialog_name)
+        nameField.addTextChangedListener { button.isEnabled = it?.isNotEmpty() == true }
     }
 
     private fun setScrollBehavior(scrollView: NestedScrollView) {

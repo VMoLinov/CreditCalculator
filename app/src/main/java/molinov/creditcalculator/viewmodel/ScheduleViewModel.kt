@@ -19,8 +19,8 @@ class ScheduleViewModel(
     private val calculateRepository: CalculateRepositoryImpl = CalculateRepositoryImpl()
 ) : ViewModel() {
 
-    fun saveDataToDB(data: List<Schedule>) {
-        scheduleRepository.insert(DataEntity(0, "name"), data)
+    fun saveDataToDB(data: List<Schedule>, name: String) {
+        scheduleRepository.insert(DataEntity(0, name), data)
     }
 
     fun getDataFromDB(): List<Pair<DataEntity, List<Schedule>>>? {

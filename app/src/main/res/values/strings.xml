@@ -57,4 +57,7 @@
     <string name="main_debt">Тело платежа</string>
     <string name="summary">Сумма</string>
     <string name="credit_list_fragment_small">Сохраненные</string>
+    <string name="enter_a_name">Введите название</string>
+    <string name="save">Сохранить</string>
+    <string name="cancel">Отмена</string>
 </resources>
