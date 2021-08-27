@@ -60,4 +60,5 @@
     <string name="enter_a_name">Введите название</string>
     <string name="save">Сохранить</string>
     <string name="cancel">Отмена</string>
+    <string name="no_data">Нет данных для сохранения</string>
 </resources>

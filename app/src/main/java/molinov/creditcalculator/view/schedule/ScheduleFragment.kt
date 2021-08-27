@@ -175,14 +175,24 @@ class ScheduleFragment : Fragment() {
         val builder = AlertDialog.Builder(requireContext())
         builder.setView(R.layout.dialog_save_calculation)
             .setPositiveButton(R.string.save) { d, _ ->
-                val dialog = d as Dialog
-                val nameField = dialog.findViewById<AppCompatEditText>(R.id.dialog_name)
-                val name = nameField.text.toString()
-                viewModel.saveDataToDB(adapter.data, name)
-                d.dismiss()
-                Navigation.findNavController(requireView())
-                    .navigate(ScheduleFragmentDirections.actionScheduleToCreditList())
-                (activity as MainActivity).selectedItem = R.id.credit_list_fragment
+                val dataToSend = data
+                dataToSend?.let {
+                    synchronized(it) {
+                        val dialog = d as Dialog
+                        val nameField = dialog.findViewById<AppCompatEditText>(R.id.dialog_name)
+                        val name = nameField.text.toString()
+                        viewModel.saveDataToDB(adapter.data, name, dataToSend)
+                        d.dismiss()
+                        Navigation.findNavController(requireView())
+                            .navigate(ScheduleFragmentDirections.actionScheduleToCreditList())
+                        (activity as MainActivity).selectedItem = R.id.credit_list_fragment
+                    }
+                }
+                if (data == null) Toast.makeText(
+                    requireContext(),
+                    getString(R.string.no_data),
+                    Toast.LENGTH_SHORT
+                ).show()
             }
             .setNegativeButton(R.string.cancel) { d, _ -> d.cancel() }
         val dialog = builder.create()

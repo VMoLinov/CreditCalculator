@@ -5,10 +5,10 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.isVisible
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
@@ -17,7 +17,8 @@ import molinov.creditcalculator.app.CreditListAppState
 import molinov.creditcalculator.app.ScheduleAppState
 import molinov.creditcalculator.model.Schedule
 import molinov.creditcalculator.model.paymentFromSchedule
-import molinov.creditcalculator.room.DataEntity
+import molinov.creditcalculator.room.DataFieldsEntity
+import molinov.creditcalculator.utils.fromEntityToDataFields
 import molinov.creditcalculator.view.schedule.ScheduleAdapter
 import molinov.creditcalculator.viewmodel.CreditListViewModel
 
@@ -26,7 +27,7 @@ class CreditListAdapter(
 ) : RecyclerView.Adapter<CreditListAdapter.ViewHolder>(),
     ItemTouchHelperAdapter {
 
-    var data: MutableList<Pair<DataEntity, List<Schedule>>> = mutableListOf()
+    var data: MutableList<Pair<DataFieldsEntity, List<Schedule>>> = mutableListOf()
     lateinit var mContext: Context
 
     @SuppressLint("NotifyDataSetChanged")
@@ -67,7 +68,7 @@ class CreditListAdapter(
         }
 
         @SuppressLint("ClickableViewAccessibility")
-        fun bind(data: Pair<DataEntity, List<Schedule>>) {
+        fun bind(data: Pair<DataFieldsEntity, List<Schedule>>) {
             if (layoutPosition != RecyclerView.NO_POSITION) {
                 itemView.findViewById<LinearLayoutCompat>(R.id.description).isVisible =
                     data.first.isExpanded
@@ -110,7 +111,8 @@ class CreditListAdapter(
         notifyItemMoved(fromPosition, toPosition)
     }
 
-    override fun onItemSwiped(position: Int, direction: Int) {
+    override fun onItemSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+        val position = viewHolder.adapterPosition
         when (direction) {
             ItemTouchHelper.START -> {
                 viewModel.delete(data[position].first.id)
@@ -118,9 +120,13 @@ class CreditListAdapter(
                 notifyItemRemoved(position)
             }
             ItemTouchHelper.END -> {
+                val action = CreditListFragmentDirections.actionCreditListToMain(
+                    fromEntityToDataFields(data[position].first)
+                )
                 data.removeAt(position)
                 notifyItemRemoved(position)
-                Toast.makeText(mContext, "TODO", Toast.LENGTH_SHORT).show()
+                Navigation.findNavController(viewHolder.itemView)
+                    .navigate(action)
             }
         }
     }

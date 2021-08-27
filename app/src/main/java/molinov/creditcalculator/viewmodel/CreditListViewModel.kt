@@ -2,7 +2,6 @@ package molinov.creditcalculator.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import molinov.creditcalculator.app.App
 import molinov.creditcalculator.app.App.Companion.schedule_dao
 import molinov.creditcalculator.app.CreditListAppState
 import molinov.creditcalculator.model.DataFields

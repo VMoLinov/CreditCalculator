@@ -14,7 +14,7 @@ class App : Application() {
     companion object {
 
         private lateinit var appInstance: App
-        private const val DB_NAME = "DataEntity.db"
+        private const val DB_NAME = "ScheduleDataBase.db"
         val schedule_dao by lazy {
             Room.databaseBuilder(
                 appInstance.applicationContext,

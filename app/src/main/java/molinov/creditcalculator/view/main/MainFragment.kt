@@ -50,6 +50,7 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val data = MainFragmentArgs.fromBundle(requireArguments()).data
         navViewModel.navLiveData.observe(viewLifecycleOwner, { restoreData(it) })
         viewModel.mainLiveData.observe(viewLifecycleOwner, { renderData(it) })
     }

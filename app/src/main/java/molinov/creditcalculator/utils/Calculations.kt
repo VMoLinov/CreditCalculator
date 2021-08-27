@@ -178,8 +178,9 @@ fun percentPaymentSummary(percentPayment: MutableList<BigDecimal>): BigDecimal {
 }
 
 fun paymentFromSchedule(data: List<Schedule>): String {
-    return if (data[0].payment != data[1].payment) data[0].payment + " ... " + data[data.size - 2].payment
-    else data[0].payment
+    return if (data[0].payment != data[1].payment) getFormattedNumber(data[0].payment) +
+            " ... " + getFormattedNumber(data[data.size - 2].payment)
+    else getFormattedNumber(data[0].payment)
 }
 
 fun BigDecimal.setLowScale(): BigDecimal = setScale(LOW_SCALE, ROUNDING)

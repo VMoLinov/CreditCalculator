@@ -47,7 +47,7 @@ class ItemTouchHelperCallback(private val adapter: CreditListAdapter) : ItemTouc
     }
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-        adapter.onItemSwiped(viewHolder.adapterPosition, direction)
+        adapter.onItemSwiped(viewHolder, direction)
     }
 
     override fun onSelectedChanged(

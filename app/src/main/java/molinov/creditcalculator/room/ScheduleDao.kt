@@ -18,30 +18,30 @@ interface ScheduleDao {
 //    fun getDataById(id: Int): List<ScheduleEntity>
 
     @Insert(onConflict = REPLACE)
-    fun insertData(entity: DataEntity): Long
-
-    @Insert(onConflict = REPLACE)
     fun insertSchedule(entity: List<ScheduleEntity>)
 
-    @Query("DELETE FROM DataEntity WHERE id LIKE :id")
-    fun deleteData(id: Long)
+    @Insert(onConflict = REPLACE)
+    fun insertDataFields(entity: DataFieldsEntity): Long
 
     @Query("DELETE FROM ScheduleEntity WHERE ownerId LIKE :id")
     fun deleteSchedule(id: Long)
 
+    @Query("DELETE FROM DataFieldsEntity WHERE id LIKE :id")
+    fun deleteDataFields(id: Long)
+
     @Transaction
     fun delete(id: Long) {
-        deleteData(id)
+        deleteDataFields(id)
         deleteSchedule(id)
     }
 
     @Transaction
-    fun insert(data: DataEntity, list: List<Schedule>) {
-        val id = insertData(data)
+    fun insert(dataFields: DataFieldsEntity, list: List<Schedule>) {
+        val id = insertDataFields(dataFields)
         insertSchedule(fromScheduleToEntity(list, id))
     }
 
     @Transaction
-    @Query("SELECT * from DataEntity")
+    @Query("SELECT * from DataFieldsEntity")
     fun getAll(): MutableList<ScheduleData>?
 }
