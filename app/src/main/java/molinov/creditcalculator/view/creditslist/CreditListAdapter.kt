@@ -123,8 +123,6 @@ class CreditListAdapter(
                 val action = CreditListFragmentDirections.actionCreditListToMain(
                     fromEntityToDataFields(data[position].first)
                 )
-                data.removeAt(position)
-                notifyItemRemoved(position)
                 Navigation.findNavController(viewHolder.itemView)
                     .navigate(action)
             }

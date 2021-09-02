@@ -2,7 +2,6 @@ package molinov.creditcalculator.utils
 
 import molinov.creditcalculator.model.DataFields
 import molinov.creditcalculator.model.Schedule
-import molinov.creditcalculator.model.setLowScale
 import molinov.creditcalculator.room.DataFieldsEntity
 import molinov.creditcalculator.room.ScheduleData
 import molinov.creditcalculator.room.ScheduleEntity
@@ -61,9 +60,10 @@ fun fromEntityToDataFields(data: DataFieldsEntity): DataFields {
     data.apply {
         return DataFields(
             Date(System.currentTimeMillis()),
-            amount.toBigDecimal().setLowScale(),
-            loanTerm.toBigDecimal().setLowScale(),
-            rate.toBigDecimal().setLowScale(),
+            amount.toBigDecimal().setScale(0),
+            loanTerm.toBigDecimal().setScale(0),
+            if (rate.toString().endsWith(".0")) rate.toBigDecimal().setScale(0)
+            else rate.toBigDecimal(),
             isMonths,
             isAnnuity
         )

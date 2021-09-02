@@ -64,6 +64,7 @@ class ScheduleFragment : Fragment() {
             binding.scheduleTextView.visibility = View.VISIBLE
             navViewModel.navLiveData.observe(viewLifecycleOwner, { restoreData(it) })
         } else {
+            binding.body.visibility = View.VISIBLE
             restoreData(data)
         }
     }
