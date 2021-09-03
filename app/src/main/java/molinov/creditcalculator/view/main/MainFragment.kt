@@ -23,6 +23,7 @@ import molinov.creditcalculator.R
 import molinov.creditcalculator.app.MainAppState
 import molinov.creditcalculator.databinding.MainFragmentBinding
 import molinov.creditcalculator.model.*
+import molinov.creditcalculator.utils.formattedYears
 import molinov.creditcalculator.viewmodel.MainViewModel
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
@@ -52,6 +53,8 @@ class MainFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         navViewModel.navLiveData.observe(viewLifecycleOwner, { restoreData(it) })
         viewModel.mainLiveData.observe(viewLifecycleOwner, { renderData(it) })
+        val data = MainFragmentArgs.fromBundle(requireArguments()).data
+        if (data != null) navViewModel.navLiveData.value = dataToBundle(data)
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -124,6 +127,8 @@ class MainFragment : Fragment() {
             })
             loanTermField.editText?.addTextChangedListener {
                 incorrectInputCheck(it, loanTermField, incorrectPrefixes, errors)
+                if (!it.isNullOrBlank()) year.text =
+                    formattedYears(it.toString().toBigDecimal(), requireView())
             }
             rateField.editText?.addTextChangedListener {
                 incorrectInputCheck(it, rateField, incorrectPrefixes, errors)
@@ -261,23 +266,44 @@ class MainFragment : Fragment() {
         super.onResume()
     }
 
-    private fun restoreData(b: Bundle) {
-        binding.apply {
-            firstPaymentField.editText?.setText(b.getString(getString(R.string.date_key)))
-            creditAmountField.editText?.setText(b.getString(getString(R.string.amount_key)))
-            loanTermField.editText?.setText(b.getString(getString(R.string.loan_term_key)))
-            typeTerm.check(b.getInt(getString(R.string.type_term_key)))
-            rateField.editText?.setText(b.getString(getString(R.string.rate_key)))
-            payment.editText?.setText(b.getString(getString(R.string.payment_key)))
-            overPayment.editText?.setText(b.getString(getString(R.string.overpayment_key)))
-            totalPayment.editText?.setText(b.getString(getString(R.string.total_payment_key)))
-            dropDownPos = b.getInt(getString(R.string.type_of_credit_key))
-            creditType.setText(creditTypes[dropDownPos])
+    private fun dataToBundle(data: DataFields): Bundle {
+        val calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
+        val formatter = getSimpleDateFormat()
+        return bundleOf(
+            getString(R.string.date_key) to formatter.format(calendar.time),
+            getString(R.string.amount_key) to data.amount.toString(),
+            getString(R.string.loan_term_key) to data.loanTerm.toString(),
+            getString(R.string.type_term_key) to
+                    if (data.isMonths) binding.month.id
+                    else binding.year.id,
+            getString(R.string.rate_key) to data.rate.toString(),
+            getString(R.string.payment_key) to "",
+            getString(R.string.overpayment_key) to "",
+            getString(R.string.total_payment_key) to "",
+            getString(R.string.type_of_credit_key) to
+                    if (data.isAnnuity) 0
+                    else 1
+        )
+    }
+
+    private fun restoreData(b: Bundle?) {
+        if (b != null) {
+            binding.apply {
+                firstPaymentField.editText?.setText(b.getString(getString(R.string.date_key)))
+                creditAmountField.editText?.setText(b.getString(getString(R.string.amount_key)))
+                loanTermField.editText?.setText(b.getString(getString(R.string.loan_term_key)))
+                typeTerm.check(b.getInt(getString(R.string.type_term_key)))
+                rateField.editText?.setText(b.getString(getString(R.string.rate_key)))
+                payment.editText?.setText(b.getString(getString(R.string.payment_key)))
+                overPayment.editText?.setText(b.getString(getString(R.string.overpayment_key)))
+                totalPayment.editText?.setText(b.getString(getString(R.string.total_payment_key)))
+                dropDownPos = b.getInt(getString(R.string.type_of_credit_key))
+                creditType.setText(creditTypes[dropDownPos])
+            }
         }
     }
 
     override fun onPause() {
-        super.onPause()
         binding.apply {
             navViewModel.navLiveData.value = bundleOf(
                 getString(R.string.date_key) to firstPaymentField.editText?.text.toString(),
@@ -291,6 +317,7 @@ class MainFragment : Fragment() {
                 getString(R.string.type_of_credit_key) to creditTypes.indexOf(binding.creditType.text.toString())
             )
         }
+        super.onPause()
     }
 
     override fun onDestroy() {

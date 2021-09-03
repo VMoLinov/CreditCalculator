@@ -4,10 +4,10 @@
     android:id="@+id/scheduleRecyclerViewHeader"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/white"
     android:orientation="horizontal"
     android:paddingStart="@dimen/recycler_padding"
     android:paddingEnd="@dimen/recycler_padding"
-    android:background="@color/white"
     android:stateListAnimator="@animator/header_elevation"
     android:theme="@style/CreditCalculator.RecycleTextView">
 
@@ -41,7 +41,7 @@
         <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
+            android:layout_gravity="top"
             android:layout_marginStart="@dimen/recycler_padding"
             android:layout_weight="1"
             android:gravity="end"

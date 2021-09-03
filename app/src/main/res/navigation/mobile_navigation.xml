@@ -10,6 +10,11 @@
         android:name="molinov.creditcalculator.view.main.MainFragment"
         android:label="@string/main_fragment"
         tools:layout="@layout/main_fragment">
+        <argument
+            android:name="data"
+            android:defaultValue="@null"
+            app:argType="molinov.creditcalculator.model.DataFields"
+            app:nullable="true" />
         <action
             android:id="@+id/action_main_to_schedule"
             app:destination="@id/schedule_fragment"

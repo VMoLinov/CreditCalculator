@@ -22,7 +22,7 @@ class CreditListFragment : Fragment() {
     private val navViewModel: CreditListViewModel by navGraphViewModels(R.id.mobile_navigation) {
         defaultViewModelProviderFactory
     }
-    private val adapter: CreditListAdapter by lazy { CreditListAdapter() }
+    private val adapter: CreditListAdapter by lazy { CreditListAdapter(creditListViewModel) }
     private lateinit var itemTouchHelper: ItemTouchHelper
 
 

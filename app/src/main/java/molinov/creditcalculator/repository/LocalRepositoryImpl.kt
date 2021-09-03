@@ -1,9 +1,9 @@
 package molinov.creditcalculator.repository
 
-import molinov.creditcalculator.room.DataEntity
+import molinov.creditcalculator.model.Schedule
+import molinov.creditcalculator.room.DataFieldsEntity
 import molinov.creditcalculator.room.ScheduleDao
 import molinov.creditcalculator.room.ScheduleData
-import molinov.creditcalculator.room.ScheduleEntity
 
 class LocalRepositoryImpl(
     private val localData: ScheduleDao
@@ -12,11 +12,11 @@ class LocalRepositoryImpl(
         return localData.getAll()
     }
 
-    override fun saveData(data: DataEntity): Long {
-        return localData.insertData(data)
+    override fun insert(dataFields: DataFieldsEntity, list: List<Schedule>) {
+        localData.insert(dataFields, list)
     }
 
-    override fun saveSchedule(schedule: List<ScheduleEntity>) {
-        localData.insertSchedule(schedule)
+    override fun delete(id: Long) {
+        localData.delete(id)
     }
 }

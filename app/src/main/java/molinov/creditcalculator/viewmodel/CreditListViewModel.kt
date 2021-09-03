@@ -2,7 +2,7 @@ package molinov.creditcalculator.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import molinov.creditcalculator.app.App
+import molinov.creditcalculator.app.App.Companion.schedule_dao
 import molinov.creditcalculator.app.CreditListAppState
 import molinov.creditcalculator.model.DataFields
 import molinov.creditcalculator.repository.LocalRepository
@@ -12,7 +12,7 @@ import molinov.creditcalculator.utils.fromScheduleDataToPair
 class CreditListViewModel(
     val creditListLiveData: MutableLiveData<CreditListAppState> = MutableLiveData(),
     val navLiveData: MutableLiveData<DataFields> = MutableLiveData(),
-    private val creditListRepository: LocalRepository = LocalRepositoryImpl(App.schedule_dao),
+    private val creditListRepository: LocalRepository = LocalRepositoryImpl(schedule_dao),
 ) : ViewModel() {
 
     fun getSchedule() {
@@ -22,5 +22,9 @@ class CreditListViewModel(
                 CreditListAppState.Success(fromScheduleDataToPair(creditListRepository.getAllData()))
             )
         }.start()
+    }
+
+    fun delete(id: Long) {
+        creditListRepository.delete(id)
     }
 }

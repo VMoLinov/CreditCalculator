@@ -6,10 +6,15 @@ import androidx.room.PrimaryKey
 import androidx.room.Relation
 
 @Entity
-data class DataEntity(
+data class DataFieldsEntity(
 
     @PrimaryKey(autoGenerate = true) val id: Long,
-    val name: String?,
+    val name: String? = null,
+    val amount: Float,
+    val loanTerm: Float,
+    val rate: Float,
+    val isMonths: Boolean,
+    val isAnnuity: Boolean,
     var isExpanded: Boolean = false
 )
 
@@ -27,7 +32,7 @@ data class ScheduleEntity(
 )
 
 data class ScheduleData(
-    @Embedded val dataList: DataEntity,
+    @Embedded val dataList: DataFieldsEntity,
     @Relation(parentColumn = "id", entityColumn = "ownerId")
     val schedule: List<ScheduleEntity>
 )
