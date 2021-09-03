@@ -1,10 +1,13 @@
 package molinov.creditcalculator.utils
 
+import android.view.View
+import molinov.creditcalculator.R
 import molinov.creditcalculator.model.DataFields
 import molinov.creditcalculator.model.Schedule
 import molinov.creditcalculator.room.DataFieldsEntity
 import molinov.creditcalculator.room.ScheduleData
 import molinov.creditcalculator.room.ScheduleEntity
+import java.math.BigDecimal
 import java.util.*
 
 fun fromScheduleToEntity(schedule: List<Schedule>, index: Long): List<ScheduleEntity> {
@@ -68,4 +71,13 @@ fun fromEntityToDataFields(data: DataFieldsEntity): DataFields {
             isAnnuity
         )
     }
+}
+
+fun formattedYears(term: BigDecimal, view: View): String {
+    val s = term.toString()
+    return if (s.endsWith("11") || s.endsWith("12") || s.endsWith("13") || s.endsWith("14")
+    ) view.resources.getString(R.string.years)
+    else if (s.endsWith("1")) view.resources.getString(R.string.years_1)
+    else if (s.endsWith("2") || s.endsWith("3") || s.endsWith("4")) view.resources.getString(R.string.years_2)
+    else view.resources.getString(R.string.years)
 }

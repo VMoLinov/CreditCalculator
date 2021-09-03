@@ -12,7 +12,8 @@ import molinov.creditcalculator.app.ScheduleAppState
 import molinov.creditcalculator.model.Schedule
 import molinov.creditcalculator.model.getFormattedNumber
 
-class ScheduleAdapter(private var mContext: Context) : RecyclerView.Adapter<ScheduleAdapter.BaseViewHolder>() {
+class ScheduleAdapter(private var mContext: Context) :
+    RecyclerView.Adapter<ScheduleAdapter.BaseViewHolder>() {
 
     var data: List<Schedule> = mutableListOf()
 

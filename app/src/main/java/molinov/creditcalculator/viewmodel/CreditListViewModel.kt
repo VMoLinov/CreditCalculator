@@ -13,18 +13,18 @@ class CreditListViewModel(
     val creditListLiveData: MutableLiveData<CreditListAppState> = MutableLiveData(),
     val navLiveData: MutableLiveData<DataFields> = MutableLiveData(),
     private val creditListRepository: LocalRepository = LocalRepositoryImpl(schedule_dao),
-        ) : ViewModel() {
+) : ViewModel() {
 
-        fun getSchedule() {
-            creditListLiveData.value = CreditListAppState.Loading
-            Thread {
-                creditListLiveData.postValue(
-                    CreditListAppState.Success(fromScheduleDataToPair(creditListRepository.getAllData()))
-                )
-            }.start()
-        }
-
-        fun delete(id: Long) {
-            creditListRepository.delete(id)
-        }
+    fun getSchedule() {
+        creditListLiveData.value = CreditListAppState.Loading
+        Thread {
+            creditListLiveData.postValue(
+                CreditListAppState.Success(fromScheduleDataToPair(creditListRepository.getAllData()))
+            )
+        }.start()
     }
+
+    fun delete(id: Long) {
+        creditListRepository.delete(id)
+    }
+}

@@ -23,6 +23,7 @@ import molinov.creditcalculator.R
 import molinov.creditcalculator.app.MainAppState
 import molinov.creditcalculator.databinding.MainFragmentBinding
 import molinov.creditcalculator.model.*
+import molinov.creditcalculator.utils.formattedYears
 import molinov.creditcalculator.viewmodel.MainViewModel
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
@@ -126,6 +127,8 @@ class MainFragment : Fragment() {
             })
             loanTermField.editText?.addTextChangedListener {
                 incorrectInputCheck(it, loanTermField, incorrectPrefixes, errors)
+                if (!it.isNullOrBlank()) year.text =
+                    formattedYears(it.toString().toBigDecimal(), requireView())
             }
             rateField.editText?.addTextChangedListener {
                 incorrectInputCheck(it, rateField, incorrectPrefixes, errors)

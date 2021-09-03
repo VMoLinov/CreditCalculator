@@ -2,6 +2,10 @@ package molinov.creditcalculator.view.creditslist
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.text.Spannable
+import android.text.SpannableStringBuilder
+import android.text.style.BackgroundColorSpan
+import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,8 +20,10 @@ import molinov.creditcalculator.R
 import molinov.creditcalculator.app.CreditListAppState
 import molinov.creditcalculator.app.ScheduleAppState
 import molinov.creditcalculator.model.Schedule
+import molinov.creditcalculator.model.getFormattedNumber
 import molinov.creditcalculator.model.paymentFromSchedule
 import molinov.creditcalculator.room.DataFieldsEntity
+import molinov.creditcalculator.utils.formattedYears
 import molinov.creditcalculator.utils.fromEntityToDataFields
 import molinov.creditcalculator.view.schedule.ScheduleAdapter
 import molinov.creditcalculator.viewmodel.CreditListViewModel
@@ -73,7 +79,9 @@ class CreditListAdapter(
                 itemView.findViewById<LinearLayoutCompat>(R.id.description).isVisible =
                     data.first.isExpanded
                 itemView.findViewById<AppCompatTextView>(R.id.name).text = data.first.name
-                itemView.findViewById<AppCompatTextView>(R.id.body).text = data.first.id.toString()
+                itemView.findViewById<AppCompatTextView>(R.id.body).text = bodyText(data)
+                itemView.findViewById<AppCompatTextView>(R.id.overPayment).text =
+                    getFormattedNumber(data.second[data.second.lastIndex].percent)
                 itemView.findViewById<AppCompatTextView>(R.id.payment).text =
                     paymentFromSchedule(data.second)
                 childAdapter.setData(ScheduleAppState.Success(data.second))
@@ -81,6 +89,40 @@ class CreditListAdapter(
                     handleSchedulesVisibility()
                 }
             }
+        }
+
+        private fun bodyText(data: Pair<DataFieldsEntity, List<Schedule>>): SpannableStringBuilder {
+            val s = SpannableStringBuilder()
+            val dataFirst = fromEntityToDataFields(data.first)
+            s.append(getFormattedNumber(dataFirst.amount.toString()))
+            s.setSpan(
+                ForegroundColorSpan(
+                    itemView.resources.getColor(R.color.recycle_red_light, itemView.context.theme)
+                ),
+                s.length - getFormattedNumber(dataFirst.amount.toString()).length,
+                s.length,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+            s.append(" " + itemView.resources.getString(R.string.on) + " ")
+            s.append(dataFirst.loanTerm.toString() + " ")
+            s.append(
+                if (dataFirst.isMonths) itemView.resources.getString(R.string.months)
+                else formattedYears(dataFirst.loanTerm, itemView)
+            )
+            s.append(" " + itemView.resources.getString(R.string.under) + " ")
+            s.append(dataFirst.rate.toString() + itemView.resources.getString(R.string.percent_sign))
+            s.setSpan(
+                BackgroundColorSpan(
+                    itemView.resources.getColor(
+                        android.R.color.holo_blue_light,
+                        itemView.context.theme
+                    )
+                ),
+                s.length - dataFirst.rate.toString().length - 1,
+                s.length,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+            return s
         }
 
         private fun handleSchedulesVisibility() {
