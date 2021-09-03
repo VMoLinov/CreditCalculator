@@ -34,7 +34,6 @@ class CreditListAdapter(
     ItemTouchHelperAdapter {
 
     var data: MutableList<Pair<DataFieldsEntity, List<Schedule>>> = mutableListOf()
-    lateinit var mContext: Context
 
     @SuppressLint("NotifyDataSetChanged")
     fun setData(appState: CreditListAppState) {
@@ -45,7 +44,6 @@ class CreditListAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        mContext = parent.context
         return ViewHolder(
             LayoutInflater.from(parent.context).inflate(
                 R.layout.credit_list_fragment_recycle_item, parent, false

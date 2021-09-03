@@ -9,8 +9,7 @@
         android:id="@+id/body"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:visibility="gone">
+        android:orientation="vertical">
 
         <include
             android:id="@+id/header"
@@ -38,21 +37,29 @@
         android:id="@+id/schedule_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
         app:layout_constraintBottom_toTopOf="@+id/schedule_image_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_chainStyle="packed" />
+        app:layout_constraintVertical_chainStyle="packed"
+        tools:text="@string/schedule_empty" />
 
-    <androidx.appcompat.widget.AppCompatImageButton
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/schedule_image_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/schedule_empty_margin"
+        android:backgroundTint="@color/secondaryLightColor"
+        android:text="@string/back"
         android:visibility="gone"
+        app:icon="@drawable/ic_undo"
+        app:iconGravity="start"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/schedule_text_view" />
+        app:layout_constraintTop_toBottomOf="@+id/schedule_text_view"
+        tools:visibility="visible" />
 
     <include
         android:id="@+id/fab_layout"
