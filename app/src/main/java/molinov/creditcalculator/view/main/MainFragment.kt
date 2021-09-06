@@ -342,8 +342,8 @@ class MainFragment : Fragment() {
         super.onPause()
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
+    override fun onDestroy() {
+        super.onDestroy()
         _binding = null
     }
 }

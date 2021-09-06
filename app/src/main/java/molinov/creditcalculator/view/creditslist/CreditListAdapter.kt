@@ -1,7 +1,6 @@
 package molinov.creditcalculator.view.creditslist
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.BackgroundColorSpan
@@ -149,6 +148,7 @@ class CreditListAdapter(
             data.add(toPosition, this)
         }
         notifyItemMoved(fromPosition, toPosition)
+        viewModel.update(data[fromPosition], data[toPosition])
     }
 
     override fun onItemSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
