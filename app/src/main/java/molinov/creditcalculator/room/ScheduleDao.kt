@@ -1,10 +1,7 @@
 package molinov.creditcalculator.room
 
-import androidx.room.Dao
-import androidx.room.Insert
+import androidx.room.*
 import androidx.room.OnConflictStrategy.REPLACE
-import androidx.room.Query
-import androidx.room.Transaction
 import molinov.creditcalculator.model.Schedule
 import molinov.creditcalculator.utils.fromScheduleToEntity
 
@@ -23,17 +20,36 @@ interface ScheduleDao {
     @Insert(onConflict = REPLACE)
     fun insertDataFields(entity: DataFieldsEntity): Long
 
-    @Query("DELETE FROM ScheduleEntity WHERE ownerId LIKE :id")
-    fun deleteSchedule(id: Long)
+    @Update(onConflict = REPLACE)
+    fun updateSchedule(entity: List<ScheduleEntity>)
 
-    @Query("DELETE FROM DataFieldsEntity WHERE id LIKE :id")
-    fun deleteDataFields(id: Long)
+    @Update(onConflict = REPLACE)
+    fun updateDataFields(entity: DataFieldsEntity): Int
+
+    @Transaction
+    fun update(
+        from: Pair<DataFieldsEntity, List<Schedule>>,
+        to: Pair<DataFieldsEntity, List<Schedule>>
+    ) {
+        val first = updateDataFields(from.first).toLong()
+        val second = updateDataFields(to.first).toLong()
+        deleteSchedule(first)
+        deleteSchedule(second)
+        updateSchedule(fromScheduleToEntity(from.second, first))
+        updateSchedule(fromScheduleToEntity(to.second, second))
+    }
 
     @Transaction
     fun delete(id: Long) {
         deleteDataFields(id)
         deleteSchedule(id)
     }
+
+    @Query("DELETE FROM ScheduleEntity WHERE ownerId LIKE :id")
+    fun deleteSchedule(id: Long)
+
+    @Query("DELETE FROM DataFieldsEntity WHERE id LIKE :id")
+    fun deleteDataFields(id: Long)
 
     @Transaction
     fun insert(dataFields: DataFieldsEntity, list: List<Schedule>) {

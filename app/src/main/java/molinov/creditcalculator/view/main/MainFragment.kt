@@ -1,7 +1,10 @@
 package molinov.creditcalculator.view.main
 
+import android.animation.ArgbEvaluator
+import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -63,15 +66,13 @@ class MainFragment : Fragment() {
         val errors = resources.getStringArray(R.array.input_errors)
         val incorrectPrefixes = resources.getStringArray(R.array.incorrect_prefixes)
         binding.apply {
-            // How I may accept this behavior (clearFocus) to disabled views on a bottom?
-            // I try focused, focusedInTouchMode, clicked = true, not work.
-//            nestedScrollMain.setOnTouchListener { _, _ ->
-//                requireActivity().currentFocus?.clearFocus()
-//                hideKeyboard(requireContext(), requireView())
-//                return@setOnTouchListener true
-//            }
+            nestedScrollMain.setOnTouchListener { _, _ ->
+                requireActivity().currentFocus?.clearFocus()
+                hideKeyboard(requireContext(), requireView())
+                return@setOnTouchListener false
+            }
             firstPaymentField.editText?.setOnTouchListener { _, event ->
-                if (MotionEvent.ACTION_UP == event?.action) datePickerLaunch()
+                if (MotionEvent.ACTION_UP == event.action) datePickerLaunch()
                 return@setOnTouchListener false
             }
             scheduleBtn.setOnClickListener {
@@ -81,7 +82,6 @@ class MainFragment : Fragment() {
                         collectDataFields(binding)
                     )
                     Navigation.findNavController(it).navigate(action)
-                    (activity as MainActivity).selectedItem = R.id.schedule_fragment
                 } else {
                     Toast.makeText(
                         context,
@@ -151,7 +151,27 @@ class MainFragment : Fragment() {
                 getString(R.string.required_field_small),
                 true
             )
+            payment.editText?.addTextChangedListener {
+                animateBottomField(payment)
+            }
+            overPayment.editText?.addTextChangedListener {
+                animateBottomField(overPayment)
+            }
+            totalPayment.editText?.addTextChangedListener {
+                animateBottomField(totalPayment)
+            }
         }
+    }
+
+    private fun animateBottomField(edit: TextInputLayout) {
+        ObjectAnimator.ofObject(
+            edit.editText,
+            "textColor",
+            ArgbEvaluator(),
+            resources.getColor(R.color.recycle_red_dark, context?.theme),
+            resources.getColor(R.color.primaryDarkColor, context?.theme)
+        ).setDuration(1200).start()
+        edit.editText?.alpha = 1f
     }
 
     private fun renderData(mainAppState: MainAppState) {
@@ -258,11 +278,13 @@ class MainFragment : Fragment() {
         picker.show(this.parentFragmentManager, "DATE_PICKER")
     }
 
+    @SuppressLint("SourceLockedOrientationActivity")
     override fun onResume() {
         val adapter = ArrayAdapter(requireContext(), R.layout.list_item, creditTypes)
         binding.creditType.setText(creditTypes[dropDownPos])
         binding.creditType.setAdapter(adapter)
         (activity as MainActivity).selectedItem = R.id.main_fragment
+        requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         super.onResume()
     }
 

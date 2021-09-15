@@ -65,4 +65,6 @@
     <string name="under">под</string>
     <string name="years_1">год</string>
     <string name="years_2">года</string>
+    <string name="back">назад</string>
+    <string name="details">Подробнее</string>
 </resources>

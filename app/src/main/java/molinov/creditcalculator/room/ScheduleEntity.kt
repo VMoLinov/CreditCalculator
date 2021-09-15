@@ -8,7 +8,7 @@ import androidx.room.Relation
 @Entity
 data class DataFieldsEntity(
 
-    @PrimaryKey(autoGenerate = true) val id: Long,
+    @PrimaryKey(autoGenerate = true) var id: Long,
     val name: String? = null,
     val amount: Float,
     val loanTerm: Float,

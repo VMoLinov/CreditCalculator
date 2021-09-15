@@ -1,7 +1,6 @@
 package molinov.creditcalculator.view.creditslist
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.BackgroundColorSpan
@@ -34,7 +33,6 @@ class CreditListAdapter(
     ItemTouchHelperAdapter {
 
     var data: MutableList<Pair<DataFieldsEntity, List<Schedule>>> = mutableListOf()
-    lateinit var mContext: Context
 
     @SuppressLint("NotifyDataSetChanged")
     fun setData(appState: CreditListAppState) {
@@ -45,7 +43,6 @@ class CreditListAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        mContext = parent.context
         return ViewHolder(
             LayoutInflater.from(parent.context).inflate(
                 R.layout.credit_list_fragment_recycle_item, parent, false
@@ -151,6 +148,7 @@ class CreditListAdapter(
             data.add(toPosition, this)
         }
         notifyItemMoved(fromPosition, toPosition)
+        viewModel.update(data[fromPosition], data[toPosition])
     }
 
     override fun onItemSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {

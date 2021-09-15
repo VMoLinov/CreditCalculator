@@ -1,5 +1,6 @@
 package molinov.creditcalculator.view.creditslist
 
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.ItemTouchHelper
+import molinov.creditcalculator.MainActivity
 import molinov.creditcalculator.R
 import molinov.creditcalculator.databinding.CreditListFragmentBinding
 import molinov.creditcalculator.viewmodel.CreditListViewModel
@@ -47,5 +49,16 @@ class CreditListFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onResume() {
+        (activity as MainActivity).selectedItem = R.id.credit_list_fragment
+        requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR
+        super.onResume()
+    }
+
+    override fun onPause() {
+        navViewModel.navLiveData.value = adapter
+        super.onPause()
     }
 }

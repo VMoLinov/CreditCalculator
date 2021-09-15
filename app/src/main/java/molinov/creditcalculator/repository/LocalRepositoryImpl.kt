@@ -16,6 +16,16 @@ class LocalRepositoryImpl(
         localData.insert(dataFields, list)
     }
 
+    override fun update(
+        from: Pair<DataFieldsEntity, List<Schedule>>,
+        to: Pair<DataFieldsEntity, List<Schedule>>
+    ) {
+        val cash = from.first.id
+        from.first.id = to.first.id
+        to.first.id = cash
+        localData.update(from, to)
+    }
+
     override fun delete(id: Long) {
         localData.delete(id)
     }

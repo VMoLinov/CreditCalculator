@@ -4,6 +4,7 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.app.AlertDialog
 import android.app.Dialog
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatEditText
+import androidx.core.view.isVisible
 import androidx.core.widget.NestedScrollView
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
@@ -51,7 +53,6 @@ class ScheduleFragment : Fragment() {
 //                LinearLayoutManager.VERTICAL
 //            )
 //        )
-        setFAB()
         setScrollBehavior(binding.scrollView)
         return binding.root
     }
@@ -61,18 +62,30 @@ class ScheduleFragment : Fragment() {
         data = ScheduleFragmentArgs.fromBundle(requireArguments()).data
         if (data == null) {
             binding.scheduleTextView.text = getString(R.string.schedule_empty)
+            binding.body.visibility = View.GONE
             binding.scheduleTextView.visibility = View.VISIBLE
+            binding.scheduleImageButton.visibility = View.VISIBLE
+            setBack()
             navViewModel.navLiveData.observe(viewLifecycleOwner, { restoreData(it) })
         } else {
-            binding.body.visibility = View.VISIBLE
             restoreData(data)
+        }
+    }
+
+    private fun setBack() {
+        binding.scheduleImageButton.setOnClickListener {
+            Navigation.findNavController(requireView())
+                .navigate(ScheduleFragmentDirections.actionScheduleToMain())
         }
     }
 
     private fun restoreData(d: DataFields?) {
         if (d != null) {
+            setFAB()
             data = d
             binding.scheduleTextView.visibility = View.GONE
+            binding.scheduleImageButton.visibility = View.GONE
+            binding.body.visibility = View.VISIBLE
             viewModel.scheduleLiveData.observe(viewLifecycleOwner, { adapter.setData(it) })
             viewModel.getSchedule(d)
             binding.header.payment.text = parseDataFieldsToCalculate(d).payment
@@ -89,6 +102,7 @@ class ScheduleFragment : Fragment() {
 
     private fun setInitialState() {
         binding.fabLayout.apply {
+            fabLayout.isVisible = true
             transparentBackground.alpha = 0f
             optionOneContainer.apply {
                 alpha = 0f
@@ -135,14 +149,10 @@ class ScheduleFragment : Fragment() {
                 animate().translationY(-300f).alpha(1f)
                     .setListener(object : AnimatorListenerAdapter() {
                         override fun onAnimationEnd(animation: Animator) {
-                            getChildAt(0).setOnClickListener {
-                                Toast.makeText(it.context, "work", Toast.LENGTH_SHORT).show()
-                            }
                             getChildAt(1).setOnClickListener {
                                 createDialogToSave()
                                 collapseFAB()
                             }
-                            getChildAt(0).isClickable = true
                             getChildAt(1).isClickable = true
                         }
                     })
@@ -151,11 +161,13 @@ class ScheduleFragment : Fragment() {
                 animate().translationY(-175f).alpha(1f)
                     .setListener(object : AnimatorListenerAdapter() {
                         override fun onAnimationEnd(animation: Animator) {
-                            getChildAt(0).setOnClickListener {
-                                Toast.makeText(it.context, "work", Toast.LENGTH_SHORT).show()
+                            getChildAt(1).setOnClickListener {
+                                collapseFAB()
+                                requireActivity().requestedOrientation =
+                                    if (activity?.requestedOrientation == ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE)
+                                        ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR
+                                    else ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
                             }
-                            getChildAt(1).setOnClickListener {}
-                            getChildAt(0).isClickable = true
                             getChildAt(1).isClickable = true
                         }
                     })
@@ -227,6 +239,12 @@ class ScheduleFragment : Fragment() {
 
     override fun onResume() {
         (activity as MainActivity).selectedItem = R.id.schedule_fragment
+        requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR
         super.onResume()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 }

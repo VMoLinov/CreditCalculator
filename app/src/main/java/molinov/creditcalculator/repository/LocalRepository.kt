@@ -10,5 +10,10 @@ interface LocalRepository {
 
     fun insert(dataFields: DataFieldsEntity, list: List<Schedule>)
 
+    fun update(
+        from: Pair<DataFieldsEntity, List<Schedule>>,
+        to: Pair<DataFieldsEntity, List<Schedule>>
+    )
+
     fun delete(id: Long)
 }
