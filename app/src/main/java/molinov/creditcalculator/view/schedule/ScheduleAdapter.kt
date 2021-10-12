@@ -1,6 +1,5 @@
 package molinov.creditcalculator.view.schedule
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -17,11 +16,9 @@ class ScheduleAdapter(private var mContext: Context) :
 
     var data: List<Schedule> = mutableListOf()
 
-    @SuppressLint("NotifyDataSetChanged")
     fun setData(scheduleAppState: ScheduleAppState) {
         if (scheduleAppState is ScheduleAppState.Success) {
             this.data = scheduleAppState.data
-            notifyDataSetChanged()
         }
     }
 
