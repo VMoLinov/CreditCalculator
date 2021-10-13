@@ -2,6 +2,7 @@ package molinov.creditcalculator.view.schedule
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.pm.ActivityInfo
@@ -25,6 +26,8 @@ import molinov.creditcalculator.databinding.ScheduleFragmentBinding
 import molinov.creditcalculator.model.Calculate
 import molinov.creditcalculator.model.DataFields
 import molinov.creditcalculator.model.parseDataFieldsToCalculate
+import molinov.creditcalculator.model.parseDataFieldsToUI
+import molinov.creditcalculator.utils.formattedYears
 import molinov.creditcalculator.viewmodel.ScheduleViewModel
 
 class ScheduleFragment : Fragment() {
@@ -95,20 +98,27 @@ class ScheduleFragment : Fragment() {
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged", "SetTextI18n")
     private fun fillHeader(c: Calculate) {
-        binding.header.apply {
-            creditAmount?.text = data?.amount.toString()
-            loanTerm?.text = data?.loanTerm.toString()
-            payment.text = c.payment
-            overPayment?.text = c.overPayment
-            rate?.text = data?.rate.toString()
-            details?.setOnClickListener {
-                if (isRecyclerExpanded) {
-                    adapter.notifyItemRangeRemoved(0, adapter.data.size)
-                } else {
-                    adapter.notifyItemRangeInserted(0, adapter.data.size)
+        if (data != null) {
+            binding.header.apply {
+                val d = parseDataFieldsToUI(data!!)
+                creditAmount?.text = d.amount
+                loanTerm?.text = d.loanTerm + " " +
+                        if (d.isMonths) resources.getString(R.string.months)
+                        else formattedYears(d.loanTerm.toBigDecimal(), requireView())
+                payment.text = c.payment
+                overPayment?.text = c.overPayment
+                rate?.text = d.rate
+                details?.setOnClickListener {
+                    if (isRecyclerExpanded) {
+                        binding.scrollView.visibility = View.GONE
+                    } else {
+                        binding.scrollView.visibility = View.VISIBLE
+                        adapter.notifyDataSetChanged()
+                    }
+                    isRecyclerExpanded = !isRecyclerExpanded
                 }
-                isRecyclerExpanded = !isRecyclerExpanded
             }
         }
     }

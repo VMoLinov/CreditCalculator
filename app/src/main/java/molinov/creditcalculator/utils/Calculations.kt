@@ -171,6 +171,24 @@ fun scheduleDifferentiate(
     return result
 }
 
+fun parseDataFieldsToUI(data: DataFields): DataFieldsForUI {
+    return DataFieldsForUI(
+        parseLongDateToString(data.firstDate.time),
+        getFormattedNumber(bigDecimalToString(data.amount)),
+        bigDecimalToString(data.loanTerm),
+        bigDecimalToString(data.rate) + " %",
+        data.isMonths,
+        data.isAnnuity
+    )
+}
+
+fun bigDecimalToString(d: BigDecimal): String {
+    val string = d.toString()
+    if (string.endsWith(".00")) return string.removeSuffix(".00")
+    else if (string.endsWith("0")) return string.removeSuffix("0")
+    return string
+}
+
 fun percentPaymentSummary(percentPayment: MutableList<BigDecimal>): BigDecimal {
     var count = BigDecimal(0, MathContext(LOW_SCALE, ROUNDING))
     for (item in percentPayment) count += item.setLowScale()
