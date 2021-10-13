@@ -182,6 +182,15 @@ fun parseDataFieldsToUI(data: DataFields): DataFieldsForUI {
     )
 }
 
+fun effectiveRate(over: String, amount: String): String {
+    val o = over.replace(" ", "").toBigDecimal().setBigScale()
+    val a = amount.replace(" ", "").toBigDecimal().setBigScale()
+    val string = (o / a).times(BigDecimal(100)).setLowScale().toString()
+    if (string.endsWith(".00")) return "${string.removeSuffix(".00")} %"
+    else if (string.endsWith("0")) return "${string.removeSuffix("0")} %"
+    return "$string %"
+}
+
 fun bigDecimalToString(d: BigDecimal): String {
     val string = d.toString()
     if (string.endsWith(".00")) return string.removeSuffix(".00")

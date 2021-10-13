@@ -23,10 +23,7 @@ import androidx.navigation.navGraphViewModels
 import molinov.creditcalculator.MainActivity
 import molinov.creditcalculator.R
 import molinov.creditcalculator.databinding.ScheduleFragmentBinding
-import molinov.creditcalculator.model.Calculate
-import molinov.creditcalculator.model.DataFields
-import molinov.creditcalculator.model.parseDataFieldsToCalculate
-import molinov.creditcalculator.model.parseDataFieldsToUI
+import molinov.creditcalculator.model.*
 import molinov.creditcalculator.utils.formattedYears
 import molinov.creditcalculator.viewmodel.ScheduleViewModel
 
@@ -110,6 +107,7 @@ class ScheduleFragment : Fragment() {
                 payment.text = c.payment
                 overPayment?.text = c.overPayment
                 rate?.text = d.rate
+                effectiveRate?.text = effectiveRate(c.overPayment, d.amount)
                 details?.setOnClickListener {
                     if (isRecyclerExpanded) {
                         binding.scrollView.visibility = View.GONE
