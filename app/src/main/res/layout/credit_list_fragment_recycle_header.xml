@@ -21,6 +21,7 @@
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="0dp"
+        android:paddingStart="@dimen/recycler_padding"
         android:layout_height="wrap_content"
         android:layout_weight="1.5"
         android:orientation="vertical">

@@ -105,13 +105,16 @@ class ScheduleFragment : Fragment() {
                         if (d.isMonths) resources.getString(R.string.months)
                         else formattedYears(d.loanTerm.toBigDecimal(), requireView())
                 payment.text = c.payment
+                binding.recycleHeader.payment.text = c.payment
                 overPayment?.text = c.overPayment
                 rate?.text = d.rate
                 effectiveRate?.text = effectiveRate(c.overPayment, d.amount)
                 details?.setOnClickListener {
                     if (isRecyclerExpanded) {
+                        binding.recycleHeader.scheduleRecyclerViewHeader.visibility = View.GONE
                         binding.scrollView.visibility = View.GONE
                     } else {
+                        binding.recycleHeader.scheduleRecyclerViewHeader.visibility = View.VISIBLE
                         binding.scrollView.visibility = View.VISIBLE
                         adapter.notifyDataSetChanged()
                     }

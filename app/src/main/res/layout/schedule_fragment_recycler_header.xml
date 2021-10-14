@@ -29,10 +29,10 @@
                 android:text="@string/credit_amount" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/credit_amount"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_horizontal" />
+                android:gravity="center_horizontal"
+                android:text="@string/loan_term" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="match_parent"
@@ -41,10 +41,10 @@
                 android:text="@string/payment" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/payment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_horizontal" />
+                android:gravity="center_horizontal"
+                android:text="@string/overpayment" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="match_parent"
@@ -53,10 +53,12 @@
                 android:text="@string/rate" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/rate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_horizontal" />
+                android:gravity="center_horizontal"
+                android:text="@string/effective_rate" />
+
+
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <androidx.appcompat.widget.LinearLayoutCompat
@@ -66,10 +68,10 @@
             android:orientation="vertical">
 
             <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/credit_amount"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:text="@string/loan_term" />
+                android:gravity="center_horizontal" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/loan_term"
@@ -78,10 +80,10 @@
                 android:gravity="center_horizontal" />
 
             <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/payment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:text="@string/overpayment" />
+                android:gravity="center_horizontal" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/over_payment"
@@ -90,10 +92,10 @@
                 android:gravity="center_horizontal" />
 
             <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/rate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:text="@string/effective_rate" />
+                android:gravity="center_horizontal" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/effective_rate"
@@ -107,7 +109,7 @@
         android:id="@+id/details"
         style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="wrap_content"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="end"
         android:text="@string/details"
         android:textAllCaps="false" />

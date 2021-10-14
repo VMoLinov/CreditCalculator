@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">CreditCalculator</string>
+    <string name="first_payment">Первый платеж</string>
+    <string name="credit_amount">Сумма кредита</string>
+    <string name="loan_term">Срок</string>
+    <string name="rate">Ставка</string>
+    <string name="calculate">Рассчитать</string>
+    <string name="schedule">График</string>
+    <string name="payment">Платеж</string>
+    <string name="overpayment">Переплата</string>
+    <string name="total">Сумма платежей</string>
+    <string name="months">мес</string>
+    <string name="years">лет</string>
+    <string name="credit_type">Тип кредита</string>
+    <string name="choice_date">Выберите дату</string>
+    <string name="required_field">Обязательное поле</string>
+    <string name="required_field_small">Введите значение</string>
+    <string name="complete_all_fields">Заполните все поля</string>
+    <string-array name="credit_types">
+        <item>аннуитетный</item>
+        <item>дифференцированный</item>
+    </string-array>
+    <string-array name="incorrect_prefixes">
+        <item>0</item>
+        <item>.</item>
+    </string-array>
+    <string-array name="input_errors">
+        <item>Не ноль</item>
+        <item>Введите число</item>
+    </string-array>
+    <string-array name="input_errors_main">
+        <item>Ноль не может быть первым числом</item>
+        <item>Значение не может начинаться с точки</item>
+    </string-array>
+    <string name="main_fragment">Главная</string>
+    <string name="schedule_fragment">Информация о кредите</string>
+    <string name="credit_list_fragment">Сохраненные расчеты</string>
+    <string name="schedule_empty">Здесь пока нет графиков\nСделайте первый расчет!</string>
+    <string name="payments">Дата платежа</string>
+    <string name="balance">Остаток долга</string>
+    <string name="percents">Процент</string>
+    <string name="main_debt">Тело платежа</string>
+    <string name="summary">Сумма</string>
+    <string name="credit_list_fragment_small">Сохраненные</string>
+    <string name="enter_a_name">Введите название</string>
+    <string name="save">Сохранить</string>
+    <string name="cancel">Отмена</string>
+    <string name="no_data">Нет данных для сохранения</string>
+    <string name="on">на</string>
+    <string name="under">под</string>
+    <string name="years_1">год</string>
+    <string name="years_2">года</string>
+    <string name="back">назад</string>
+    <string name="details">Подробнее</string>
+    <string name="effective_rate">Эффективная ставка</string>
+</resources>
