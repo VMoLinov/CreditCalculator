@@ -48,8 +48,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:focusable="false"
-                    android:hint="@string/first_payment"
-                    android:text="28.08.2021" />
+                    android:hint="@string/first_payment" />
                 <!-- is it ok? focusable = false for not called soft keyboard -->
             </com.google.android.material.textfield.TextInputLayout>
         </androidx.appcompat.widget.LinearLayoutCompat>
@@ -82,8 +81,7 @@
                     android:hint="@string/credit_amount"
                     android:imeOptions="actionNext"
                     android:inputType="number"
-                    android:maxLength="13"
-                    android:text="100 000" />
+                    android:maxLength="13" />
             </com.google.android.material.textfield.TextInputLayout>
         </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -115,8 +113,7 @@
                     android:layout_height="match_parent"
                     android:hint="@string/loan_term"
                     android:inputType="number"
-                    android:maxLength="3"
-                    android:text="12" />
+                    android:maxLength="3" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.button.MaterialButtonToggleGroup
@@ -178,8 +175,7 @@
                     android:hint="@string/rate"
                     android:imeOptions="actionDone"
                     android:inputType="numberDecimal"
-                    android:maxLength="5"
-                    android:text="5.2" />
+                    android:maxLength="5" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
