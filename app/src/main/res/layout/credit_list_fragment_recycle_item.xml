@@ -88,7 +88,7 @@
 
                 <include
                     android:id="@+id/header"
-                    layout="@layout/schedule_fragment_recycler_header"
+                    layout="@layout/credit_list_fragment_recycle_header"
                     android:paddingTop="@dimen/recycler_padding_top"
                     android:paddingBottom="@dimen/recycler_padding_top" />
 

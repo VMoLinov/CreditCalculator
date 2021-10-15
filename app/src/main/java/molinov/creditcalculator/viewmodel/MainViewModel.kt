@@ -17,11 +17,7 @@ class MainViewModel(
         mainLiveData.value = MainAppState.Loading
         Thread {
             mainLiveData.postValue(
-                MainAppState.Success(
-                    calculateRepository.getCalculateFromData(
-                        data
-                    )
-                )
+                MainAppState.Success(calculateRepository.getCalculateFromData(data))
             )
         }.start()
     }

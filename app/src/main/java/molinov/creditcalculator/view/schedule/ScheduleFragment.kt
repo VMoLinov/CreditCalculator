@@ -2,6 +2,7 @@ package molinov.creditcalculator.view.schedule
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.pm.ActivityInfo
@@ -22,8 +23,8 @@ import androidx.navigation.navGraphViewModels
 import molinov.creditcalculator.MainActivity
 import molinov.creditcalculator.R
 import molinov.creditcalculator.databinding.ScheduleFragmentBinding
-import molinov.creditcalculator.model.DataFields
-import molinov.creditcalculator.model.parseDataFieldsToCalculate
+import molinov.creditcalculator.model.*
+import molinov.creditcalculator.utils.formattedYears
 import molinov.creditcalculator.viewmodel.ScheduleViewModel
 
 class ScheduleFragment : Fragment() {
@@ -38,7 +39,8 @@ class ScheduleFragment : Fragment() {
     }
     private val adapter: ScheduleAdapter by lazy { ScheduleAdapter(requireContext()) }
     private var data: DataFields? = null
-    private var isExpanded = false
+    private var isFABExpanded = false
+    private var isRecyclerExpanded = false
     private var isScrolling = false
 
     override fun onCreateView(
@@ -88,14 +90,44 @@ class ScheduleFragment : Fragment() {
             binding.body.visibility = View.VISIBLE
             viewModel.scheduleLiveData.observe(viewLifecycleOwner, { adapter.setData(it) })
             viewModel.getSchedule(d)
-            binding.header.payment.text = parseDataFieldsToCalculate(d).payment
+            val c = parseDataFieldsToCalculate(d)
+            fillHeader(c)
+        }
+    }
+
+    @SuppressLint("NotifyDataSetChanged", "SetTextI18n")
+    private fun fillHeader(c: Calculate) {
+        if (data != null) {
+            binding.header.apply {
+                val d = parseDataFieldsToUI(data!!)
+                creditAmount?.text = d.amount
+                loanTerm?.text = d.loanTerm + " " +
+                        if (d.isMonths) resources.getString(R.string.months)
+                        else formattedYears(d.loanTerm.toBigDecimal(), requireView())
+                payment.text = c.payment
+                binding.recycleHeader.payment.text = c.payment
+                overPayment?.text = c.overPayment
+                rate?.text = d.rate
+                effectiveRate?.text = effectiveRate(c.overPayment, d.amount)
+                details?.setOnClickListener {
+                    if (isRecyclerExpanded) {
+                        binding.recycleHeader.scheduleRecyclerViewHeader.visibility = View.GONE
+                        binding.scrollView.visibility = View.GONE
+                    } else {
+                        binding.recycleHeader.scheduleRecyclerViewHeader.visibility = View.VISIBLE
+                        binding.scrollView.visibility = View.VISIBLE
+                        adapter.notifyDataSetChanged()
+                    }
+                    isRecyclerExpanded = !isRecyclerExpanded
+                }
+            }
         }
     }
 
     private fun setFAB() {
         setInitialState()
         binding.fabLayout.fab.setOnClickListener {
-            if (isExpanded) collapseFAB()
+            if (isFABExpanded) collapseFAB()
             else expandFAB()
         }
     }
@@ -116,7 +148,7 @@ class ScheduleFragment : Fragment() {
     }
 
     private fun collapseFAB() {
-        isExpanded = false
+        isFABExpanded = false
         if (!isScrolling) binding.fabLayout.fab.animate().alpha(0.2f).duration = 1000
         binding.fabLayout.apply {
             optionOneContainer.apply {
@@ -142,7 +174,7 @@ class ScheduleFragment : Fragment() {
     }
 
     private fun expandFAB() {
-        isExpanded = true
+        isFABExpanded = true
         binding.fabLayout.apply {
             fab.animate().alpha(1f)
             optionOneContainer.apply {
