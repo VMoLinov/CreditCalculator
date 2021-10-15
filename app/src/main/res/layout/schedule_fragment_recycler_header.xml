@@ -58,7 +58,6 @@
                 android:gravity="center_horizontal"
                 android:text="@string/effective_rate" />
 
-
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <androidx.appcompat.widget.LinearLayoutCompat
