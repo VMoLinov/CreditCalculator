@@ -22,3 +22,7 @@ local.properties
 app/src/androidTest/java/molinov/creditcalculator/ExampleInstrumentedTest.kt
 
 app/src/test/java/molinov/creditcalculator/ExampleUnitTest.kt
+
+app/keys.jks
+
+*.aab
